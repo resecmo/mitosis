@@ -1,23 +1,52 @@
-#include "/home/osetr/Desktop/mitosis/kode/parameters.h"
+#include "/home/osetr/Desktop/mitosis/cylinder/kode/parameters.h"
 #include<armadillo>
 #include<iostream>
 
 // time-independent
 arma::vec::fixed<6> u_ij[I+2][J+2]; //u_ij[i][j] stands for u_i-0.5,j-0.5
-arma::sp_mat dr_ij[I+1][J+2]; //dr_ij stands for d_i,j-0.5, flow along r
-arma::sp_mat dz_ij[I+2][J+1]; //dz_ij stands for d_i-0.5,j, flow along z
-arma::mat::fixed<6,6> C_ij[I][J];
-arma::mat::fixed<6,6> A_ij[I][J];
-arma::mat::fixed<6,6> F_ij[I][J];
-arma::mat::fixed<6,6> G_ij[I][J];
-arma::mat::fixed<6,6> BJL_ij[I][J];
+arma::sp_mat dmin_mx=arma::sp_mat();
+arma::sp_mat dmax_mx=arma::sp_mat();
+arma::sp_mat dav_mx=arma::sp_mat();
+arma::sp_mat dzer_mx=arma::sp_mat();
+arma::sp_mat C_i[I];
+arma::sp_mat A_i[I];
+arma::sp_mat F_i[I];
+arma::sp_mat G_i[I];
+arma::sp_mat BJL_ij[I][J];
 
 // time-dependent
 arma::mat::fixed<6,6> BJF_ij[I][J];
 arma::mat::fixed<6,6> B_ij[I][J];
 
-//TODO
-void initializeInitial(); //initialize time-independent and inital condition
+//initialize time-independent and initial condition
+//initial condition TODO
+void initializeDiffusion(){
+	for (int i=0; i<3; ++i){ //should zeros be initialized???
+		dav_mx(i,i)=dav;
+		dmax_mx(i,i)=dmax;
+		dmin_mx(i,i)=dmin;
+	}
+}
+
+//1D->2D
+arma::sp_mat& diffr_coeff(const int& i, const int& j){
+	if (i>1) {return dmin_mx;}
+	if (i==1) {return dav_mx;}
+	return dzer_mx;
+} // diffr_coeff(i,j) stands for d_i,j+0.5
+arma::sp_mat& diffz_coeff(const int& i, const int& j){
+	if (i>1) {return dmin_mx;}
+	if (i==1) {return dmax_mx;}
+	return dzer_mx;
+} // diffz_coeff(i,j) stands for d_i+0.5,j
+
+void initializeCAFGBJL();
+//1D->2D
+arma::sp_mat& C_ij(const int& i, const int& j);
+arma::sp_mat& A_ij(const int& i, const int& j);
+arma::sp_mat& F_ij(const int& i, const int& j);
+arma::sp_mat& G_ij(const int& i, const int& j);
+
 //TODO
 void newtonStep();
 //TODO
