@@ -1,0 +1,405 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage[left=20mm, right=20mm, top=17mm]{geometry}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+cylinder_num
+\end_layout
+
+\begin_layout Standard
+system
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\partial_{t}u=-\nabla\cdot w+f(u)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w=-d.\nabla u\hspace{1em}(.\,\mathrm{is\,a\,componentwise\,multiplication})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+u=\left[\begin{array}{c}
+a\\
+a^{*}\\{}
+[aa^{*}]\\{}
+[na]\\{}
+[na^{*}\\{}
+[ana^{*}]
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+nodes
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(z_{j}=jh_{z}=\frac{j}{J}Z,r_{i}=ih_{r}=\frac{i}{I}R\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+cells
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(z_{j+0.5}=z_{j}+0.5h_{z},r_{i+0.5}=r_{i}+0.5h_{r}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+faces
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(z_{j},r_{i+0.5}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left(z_{j+0.5},r_{i}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+reducing to integration
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\iintop_{i,j}\partial_{t}urdrdz=\iintop_{i,j}\left(-\nabla\cdot w+f(u)\right)rdrdz=-\ointop_{i,j}wr\cdot dl+\iintop_{i,j}f(u)rdrdz
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+numerically 
+\begin_inset Formula $(?_{k+}=?_{k+0.5})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\partial_{t}u_{i+,j+}r_{i+}h_{r}h_{z}=-w_{i++,j+}^{r}r_{i++}h_{z}-w_{i+,j++}^{z}r_{i+}h_{r}+w_{i,j+}^{r}r_{i}h_{z}+w_{i+,j}^{z}r_{i+}h_{r}+f(u_{i+,j+})r_{i+}h_{r}h_{z}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\partial_{t}u_{i+,j+}=\frac{-w_{i++,j+}^{r}r_{i++}+w_{i,j+}^{r}r_{i}}{r_{i+}h_{r}}+\frac{-w_{i+,j++}^{z}+w_{i+,j}^{z}}{h_{z}}+f(u_{i+,j+})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w_{i,j+}^{r}=-d_{i,j+}.\frac{u_{i+,j+}-u_{i-,j+}}{h_{r}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w_{i+,j}^{z}=-d_{i+,j}.\frac{u_{i+,j+}-u_{i+,j-}}{h_{z}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+d_{i,j+}=\frac{d_{i+,j+}+d_{i-,j+}}{2d_{i+,j+}.d_{i-,j+}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+d_{i+,j}=\frac{d_{i+,j+}+d_{i+,j-}}{2d_{i+,j+}.d_{i+,j-}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+method (implicit Euler)
+\begin_inset Formula 
+\[
+\check{?}=?_{t--}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\frac{u_{i+,j+}-\check{u}_{i+,j+}}{\delta t} & =\frac{d_{i++,j+}.(u_{i+++,j+}-u_{i+,j+})r_{i++}-d_{i,j+}.(u_{i+,j+}-u_{i-,j+})r_{i}}{r_{i+}h_{r}^{2}}\\
+ & +\frac{d_{i+,j++}.(u_{i+,j+++}-u_{i+,j+})-d_{i+,j}.(u_{i+,j+}-u_{i+,j-})}{h_{z}^{2}}\\
+ & +f(u_{i+,j+})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+1-iter Newton (
+\begin_inset Formula $u^{0}=\check{u}$
+\end_inset
+
+)
+\begin_inset Formula 
+\begin{align*}
+\frac{u_{i+,j+}-\check{u}_{i+,j+}}{\delta t} & =\frac{d_{i++,j+}.(u_{i+++,j+}-u_{i+,j+})r_{i++}-d_{i,j+}.(u_{i+,j+}-u_{i-,j+})r_{i}}{r_{i+}h_{r}^{2}}\\
+ & +\frac{d_{i+,j++}.(u_{i+,j+++}-u_{i+,j+})-d_{i+,j}.(u_{i+,j+}-u_{i+,j-})}{h_{z}^{2}}\\
+ & +f(\check{u}_{i+,j+})+\frac{\partial f}{\partial u}(\check{u}_{i+,j+})(u_{i+,j+}-\check{u}_{i+,j+})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\delta t\left(f(\check{u}_{i+,j+})-\frac{\partial f}{\partial u}(\check{u}_{i+,j+})\check{u}_{i+,j+}\right) & =\left(E+\frac{\delta t}{r_{i+}h_{r}^{2}}\left[d_{i++,j+}r_{i++}+d_{i,j+}r_{i}\right].+\frac{\delta t}{h_{z}^{2}}\left[d_{i+,j++}+d_{i+,j}\right].-\frac{\partial f}{\partial u}(\check{u}_{i+,j+})\right)u_{i+,j+}\\
+ & -\frac{\delta t}{r_{i+}h_{r}^{2}}d_{i++,j+}r_{i++}.u_{i+++,j+}-\frac{\delta t}{r_{i+}h_{r}^{2}}d_{i,j+}r_{i}.u_{i-,j+}\\
+ & -\frac{\delta t}{h_{z}^{2}}d_{i+,j++}.u_{i+,j+++}-\frac{\delta t}{h_{z}^{2}}d_{i+,j}.u_{i+,j-}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\delta t\phi(\check{u}_{i+,j+})=B_{ij}u_{i+,j+}-C_{ij}u_{i+++,j+}-A_{ij}u_{i-,j+}-F_{ij}u_{i+,j+++}-G_{ij}u_{i+,j-}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+k-th iter
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $i+j=0\;mod\;2$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+B_{ij}u_{i+,j+}^{k+1}-C_{ij}u_{i+++,j+}^{k}-A_{ij}u_{i-,j+}^{k}-F_{ij}u_{i+,j+++}^{k}-G_{ij}u_{i+,j-}^{k}=\delta t\phi(\check{u}_{i+,j+})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+u_{i+,j+}^{k+1}=B_{ij}^{-1}\left(\delta t\phi(\check{u}_{i+,j+})+C_{ij}u_{i+++,j+}^{k}+A_{ij}u_{i-,j+}^{k}+F_{ij}u_{i+,j+++}^{k}+G_{ij}u_{i+,j-}^{k}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $i+j=1\;mod\;2$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+B_{ij}u_{i+,j+}^{k+1}-C_{ij}u_{i+++,j+}^{k+1}-A_{ij}u_{i-,j+}^{k+1}-F_{ij}u_{i+,j+++}^{k+1}-G_{ij}u_{i+,j-}^{k+1}=\delta t\phi(\check{u}_{i+,j+})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+u_{i+,j+}^{k+1}=\left(\delta t\phi(\check{u}_{i+,j+})+C_{ij}u_{i+++,j+}^{k+1}+A_{ij}u_{i-,j+}^{k+1}+F_{ij}u_{i+,j+++}^{k+1}+G_{ij}u_{i+,j-}^{k+1}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+gachi-tex 
+\begin_inset Formula $\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars\mars$
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

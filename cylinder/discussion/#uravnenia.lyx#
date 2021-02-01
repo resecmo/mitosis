@@ -1,0 +1,748 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage[left=20mm, right=20mm, top=17mm]{geometry}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+uravnenia
+\end_layout
+
+\begin_layout Section*
+chemistry
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A\xrightarrow{k_{cis}}A^{*}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A+A^{*}\xrightleftharpoons[k_{r}^{A}]{k_{f}^{A}}\left[AA^{*}\right]\xrightarrow{k_{cat}^{A}}2A^{*}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+PPase+A^{*}\xrightleftharpoons[k_{r}^{P}]{k_{f}^{P}}\left[PPaseA^{*}\right]\xrightarrow{k_{cat}^{P}}PPase+A
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+N+A^{?}\xrightleftharpoons[k_{r}^{N}]{k_{f}^{N}}\left[NA^{?}\right],\hspace{1em}?\in\left\{ ,*\right\} 
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[AN\right]+A^{*}\xrightleftharpoons[k^{-}]{k^{+}}\left[ANA^{*}\right]\xrightarrow{k_{*}^{-}}\left[A^{*}N\right]+A^{*}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[A^{*}N\right]+A\xrightleftharpoons[k^{-}]{k^{+}}\left[ANA^{*}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left(\partial_{t}-D\Delta\right)A & =-k_{cis}A-k_{f}^{A}A^{*}A-k^{+}\left[NA^{*}\right]A\\
+ & +k_{r}^{A}\left[AA^{*}\right]+k_{cat}^{P}\left[PPaseA^{*}\right]-k_{f}^{N}NA+k_{r}^{N}\left[NA\right]+k^{-}\left[ANA^{*}\right]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\left(\partial_{t}-D\Delta\right)A^{*} & =k_{cis}A-k_{f}^{A}AA^{*}+k_{r}^{A}\left[AA^{*}\right]+2k_{cat}^{A}[AA∗]−k_{f}^{P}PPaseA^{∗}+k_{r}^{P}[PPaseA∗]−k_{f}^{N}NA^{∗}+k_{r}^{N}[NA^{∗}]\\
+ & −k^{+}[NA]A^{∗}+(k^{-}+k_{*}^{−})[ANA^{∗}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−D∆)[AA^{∗}]=k_{f}^{A}AA^{∗}−(k_{r}^{A}+k_{cat}^{A})[AA^{∗}]\hspace{1em}?\approx0?
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−D∆)PPase=(k_{r}^{P}+k_{cat}^{P})[PPaseA^{∗}]−k_{f}^{P}PPaseA^{∗}≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−D∆)[PPaseA^{∗}]=k_{f}^{P}PPaseA^{∗}−(k_{r}^{P}+k_{cat}^{P})[PPaseA^{∗}]≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}N=−k_{f}^{N}N(A+A^{∗})+k_{r}^{N}([NA]+[NA^{∗}])
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[NA]=k_{f}^{N}NA−(k_{r}^{N}+k^{+}A^{∗})[NA]+k^{−}[ANA^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[NA^{∗}]=k_{f}^{N}NA^{∗}−\left(k_{r}^{N}+k^{+}A\right)[NA^{∗}]+\left(k^{-}+k_{∗}^{−}\right)[ANA^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[ANA^{∗}]=−(2k^{−}+k_{*}^{-})[ANA^{∗}]+k^{+}\left([NA]A^{*}+[NA^{*}]A\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+N+[NA]+[NA^{*}]+[ANA^{*}]=N_{0}\label{eq:N0=const}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+preobrazovaniya
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\left(\ref{eq:N0=00003D00003D00003Dconst}\right)\Rightarrow$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−D∆)A & =−k_{cis}A−k_{f}^{A}AA^{∗}-k^{+}[NA^{*}]A+k_{r}^{A}[AA^{∗}]+k_{cat}^{P}[PPaseA^{∗}]−k_{f}^{N}A(N_{0}−[NA^{∗}]−[ANA^{∗}])\\
+ & +(k_{r}^{N}+k_{f}^{N}A)[NA]+k^{-}[ANA^{*}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−D∆)A^{∗} & =k_{cis}A−k_{f}^{A}AA^{∗}+k_{r}^{A}[AA^{∗}]+2k_{cat}^{A}[AA^{∗}]−k_{f}^{P}PPaseA^{∗}+k_{r}^{P}[PPaseA^{∗}]\\
+ & −k_{f}^{N}N_{0}A^{∗}+(k_{r}^{N}+k_{f}^{N}A^{∗})[NA^{∗}]+(k_{f}^{N}−k^{+})[NA]A^{∗}+(k^{−}+k_{*}^{−}+k_{f}^{N}A^{∗})[ANA^{∗}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−D∆)[AA^{∗}]=k_{f}^{A}AA^{∗}−(k_{r}^{A}+k_{cat}^{A})[AA^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−D∆)PPase=(k_{r}^{P}+k_{cat}^{P})[PPaseA^{∗}]−k_{f}^{P}PPaseA^{∗}≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−D∆)[PPaseA^{∗}]=k_{f}^{P}PPaseA^{∗}−(k_{r}^{P}+k_{cat}^{P})[PPaseA^{∗}]≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[NA]=k_{f}^{N}A(N_{0}−[NA^{∗}])−(k_{r}^{N}+k^{+}A^{∗}+k_{f}^{N}A)[NA]+(k^{−}−k_{f}^{N}A)[ANA^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[NA^{∗}]=k_{f}^{N}A^{∗}(N_{0}−[NA])−(k_{r}^{N}+k_{f}^{N}A^{*}+k^{+}A)[NA^{∗}]+(k^{-}+k_{*}^{−}−k_{f}^{N}A)[ANA^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[ANA^{∗}]=−(2k^{-}+k^{+})[ANA^{∗}]+k^{+}\left([NA]A^{∗}+[NA^{*}]A\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+measureless
+\begin_inset Formula 
+\[
+A^{?}=A_{0}a^{?};\hspace{1em}PPase=\Pi_{0}p;\hspace{1em}N=\nu_{0}n;\hspace{1em}\tau=1/k_{cis}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+?[AA^{*}]=A_{0}[aa^{*}]?\hspace{1em}?[PPaseA^{*}]=A_{0}[pa^{*}]?\hspace{1em}?[NA^{?}]=A_{0}[na^{?}]?
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta\rightarrow\frac{\Delta}{L^{2}};\hspace{1em}\partial_{t}\rightarrow\frac{\partial_{t}}{\tau}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−\frac{\tau D∆}{L^{2}})a & =−a−\tau k_{f}^{A}A_{0}aa^{∗}-\tau k^{+}A_{0}[na^{*}]a+\tau k_{r}^{A}[aa^{∗}]+\tau k_{cat}^{P}[pa^{∗}]\\
+ & −\tau k_{f}^{N}\nu_{0}a(n_{0}−\frac{A_{0}}{\nu_{0}}[na^{∗}]−\frac{A_{0}}{\nu_{0}}[ana^{∗}])+\tau(k_{r}^{N}+k_{f}^{N}A_{0}a)[na]+\tau k^{-}[ana^{*}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−\frac{\tau D∆}{L^{2}})a^{∗} & =a−\tau k_{f}^{A}A_{0}aa^{∗}+\tau k_{r}^{A}[aa^{∗}]+2\tau k_{cat}^{A}[aa^{∗}]−\tau k_{f}^{P}\Pi_{0}pa^{∗}+\tau k_{r}^{P}[pa^{∗}]\\
+ & −\tau k_{f}^{N}\nu_{0}n_{0}a^{∗}+\tau(k_{r}^{N}+k_{f}^{N}A_{0}a^{∗})[na^{∗}]+\tau(k_{f}^{N}−k^{+})[na]A_{0}a^{∗}+\tau(k^{−}+k_{*}^{−}+k_{f}^{N}A_{0}a^{∗})[ana^{∗}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−\frac{\tau D∆}{L^{2}})[aa^{∗}]=\tau k_{f}^{A}A_{0}aa^{∗}−\tau(k_{r}^{A}+k_{cat}^{A})[aa^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−\frac{\tau D∆}{L^{2}})p=\frac{\tau}{\Pi_{0}}(k_{r}^{P}+k_{cat}^{P})A_{0}[pa^{∗}]−\tau k_{f}^{P}pA_{0}a^{∗}≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−\frac{\tau D∆}{L^{2}})[pa^{∗}]=\tau k_{f}^{P}\Pi_{0}pa^{∗}−\tau(k_{r}^{P}+k_{cat}^{P})[pa^{∗}]≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[na]=\tau k_{f}^{N}\nu_{0}a(n_{0}−\frac{A_{0}}{\nu_{0}}[NA^{∗}])−\tau(k_{r}^{N}+k^{+}A_{0}a^{∗}+k_{f}^{N}A_{0}a)[na]+\tau(k^{−}−k_{f}^{N}A_{0}a)[ana^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[na^{∗}]=\tau k_{f}^{N}\nu_{0}a^{∗}(n_{0}−\frac{A_{0}}{\nu_{0}}[na])−\tau(k_{r}^{N}+k_{f}^{N}A_{0}a^{*}+k^{+}A_{0}a)[na^{∗}]+\tau(k^{-}+k_{*}^{−}−k_{f}^{N}A_{0}a)[ana^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[ana^{∗}]=−\tau(2k^{-}+k^{+})[ana^{∗}]+\tau k^{+}A_{0}\left([na]a^{∗}+[na^{*}]a\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+further
+\begin_inset Formula 
+\[
+d=\frac{\tau D}{L^{2}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\kappa_{f}^{a}=\tau k_{f}^{A}A_{0};\hspace{1em}\kappa^{+}=\tau k^{+}A_{0}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\kappa_{f}^{p}=\tau k_{f}^{P}\Pi_{0}...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\kappa_{f}^{n}=\tau k_{f}^{N}\nu_{0}...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\kappa_{r}^{?}=\tau k_{r}^{?};\hspace{1em}\kappa^{-}=\tau k^{-};\hspace{1em}\kappa_{cat}^{?}=\tau k_{cat}^{?}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\alpha_{0}=\frac{A_{0}}{\nu_{0}};\hspace{1em}\beta_{0}=\frac{A_{0}}{\Pi_{0}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−d)a & =−a−\kappa_{f}^{a}aa^{∗}-\kappa^{+}[na^{*}]a+\kappa_{r}^{a}[aa^{∗}]+\kappa_{cat}^{p}[pa^{∗}]\\
+ & −\kappa_{f}^{n}a(n_{0}−\alpha_{0}([na]+[na^{∗}]+[ana^{∗}]))+\kappa_{r}^{n}[na]+\kappa^{-}[ana^{*}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−d)a^{∗} & =a−\kappa_{f}^{a}aa^{∗}+\kappa_{r}^{a}[aa^{∗}]+2\kappa_{cat}^{a}[aa^{∗}]−\kappa_{f}^{p}pa^{∗}+\kappa_{r}^{p}[pa^{∗}]\\
+ & −\kappa_{f}^{n}n_{0}a^{∗}+(\kappa_{r}^{n}+\kappa_{f}^{n}\alpha_{0}a^{∗})[na^{∗}]+(\alpha_{0}\kappa_{f}^{n}−\kappa^{+})[na]a^{∗}+(\kappa^{-}+\kappa_{*}^{-}+\kappa_{f}^{n}a^{∗})[ana^{∗}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−d)[aa^{∗}]=\kappa_{f}^{a}aa^{∗}−(\kappa_{r}^{a}+\kappa_{cat}^{a})[aa^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−d)p=\beta_{0}(\kappa_{r}^{p}+\kappa_{cat}^{p})[pa^{∗}]−\beta_{0}\kappa_{f}^{p}pa^{∗}≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−d)[pa^{∗}]=\kappa_{f}^{p}pa^{∗}−(\kappa_{r}^{p}+\kappa_{cat}^{p})[pa^{∗}]≈0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[na]=\kappa_{f}^{n}a(n_{0}−\alpha_{0}[na^{∗}])−(\kappa_{r}^{n}+\kappa^{+}a^{∗}+\kappa_{f}^{n}\alpha_{0}a)[na]+(\kappa^{−}−\kappa_{f}^{n}\alpha_{0}a)[ana^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[na^{∗}]=\kappa_{f}^{n}a^{∗}(n_{0}−\alpha_{0}[na])−(\kappa_{r}^{n}+\kappa_{f}^{n}\alpha_{0}a^{*}+\kappa^{+}a)[na^{∗}]+(\kappa^{-}+\kappa_{*}^{−}−\kappa_{f}^{n}\alpha_{0}a)[ana^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[ana^{∗}]=−(2\kappa^{-}+\kappa^{+})[ana^{∗}]+\kappa^{+}\left([na]a^{∗}+[na^{*}]a\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+finally
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+p\approx1
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+[pa^{*}]\approx\frac{\kappa_{f}^{p}}{\kappa_{r}^{p}+\kappa_{cat}^{p}}a^{*}=\kappa_{M}a^{*}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−d)a & =−a−\kappa_{f}^{a}aa^{∗}-\kappa^{+}[na^{*}]a+\kappa_{r}^{a}[aa^{∗}]+\kappa_{cat}^{p}\kappa_{M}a^{*}\\
+ & −\kappa_{f}^{n}a(n_{0}−\alpha_{0}([na]+[na^{∗}]+[ana^{∗}]))+\kappa_{r}^{n}[na]+\kappa^{-}[ana^{*}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+(∂_{t}−d)a^{∗} & =a−\kappa_{f}^{a}aa^{∗}+\kappa_{r}^{a}[aa^{∗}]+2\kappa_{cat}^{a}[aa^{∗}]+(\kappa_{M}\kappa_{r}^{p}-\kappa_{f}^{p})a^{∗}\\
+ & −\kappa_{f}^{n}n_{0}a^{∗}+(\kappa_{r}^{n}+\kappa_{f}^{n}\alpha_{0}a^{∗})[na^{∗}]+(\alpha_{0}\kappa_{f}^{n}−\kappa^{+})[na]a^{∗}+(\kappa^{-}+\kappa_{*}^{-}+\kappa_{f}^{n}\alpha_{0}a^{∗})[ana^{∗}]
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(∂_{t}−d)[aa^{∗}]=\kappa_{f}^{a}aa^{∗}−(\kappa_{r}^{a}+\kappa_{cat}^{a})[aa^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[na]=\kappa_{f}^{n}a(n_{0}−\alpha_{0}[na^{∗}])−(\kappa_{r}^{n}+\kappa^{+}a^{∗}+\kappa_{f}^{n}\alpha_{0}a)[na]+(\kappa^{−}−\kappa_{f}^{n}\alpha_{0}a)[ana^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[na^{∗}]=\kappa_{f}^{n}a^{∗}(n_{0}−\alpha_{0}[na])−(\kappa_{r}^{n}+\kappa_{f}^{n}\alpha_{0}a^{*}+\kappa^{+}a)[na^{∗}]+(\kappa^{-}+\kappa_{*}^{−}−\kappa_{f}^{n}\alpha_{0}a)[ana^{∗}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+∂_{t}[ana^{∗}]=−(2\kappa^{-}+\kappa^{+})[ana^{∗}]+\kappa^{+}\left([na]a^{∗}+[na^{*}]a\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+и всё бы ничего, но
+\end_layout
+
+\end_body
+\end_document
