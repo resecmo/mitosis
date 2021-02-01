@@ -30,13 +30,15 @@ void initializeDiffusion(){
 
 //1D->2D
 arma::sp_mat& diffr_coeff(const int& i, const int& j){
-	if (i>1) {return dmin_mx;}
+	if (i>1 && i<=I) {return dmin_mx;}
 	if (i==1) {return dav_mx;}
 	return dzer_mx;
 } // diffr_coeff(i,j) stands for d_i,j+0.5
 arma::sp_mat& diffz_coeff(const int& i, const int& j){
-	if (i>1) {return dmin_mx;}
-	if (i==1) {return dmax_mx;}
+	if (j>0 && j<=J){
+		if (i>1) {return dmin_mx;}
+		if (i==1) {return dmax_mx;}
+	}
 	return dzer_mx;
 } // diffz_coeff(i,j) stands for d_i+0.5,j
 
