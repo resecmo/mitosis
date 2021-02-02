@@ -39,7 +39,7 @@ const double j26_ = kneg + knegst;
 const double j33_ = - (kar + kac);
 const double j56_ = kneg + knegst;
 const double j66_ = - (2*kneg + kpos);
-
+//jacobian
 arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
 	const double knfan456 = knfn0 - knfal0*(u[3] + u[4] + u[5]);
 	const double knfau1 = knfal0*u[0];
@@ -51,8 +51,22 @@ arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
 		{1 - kafu2, j22_ - kafu1 - knfan456 - kpos*u[2], j23_, j242*u[1], knr + knfau2, j26_ + knfau2},
 		{kafu2,		    kafu1,		 j33_,	       0,	 0,	   0},
 		{knfan456,    -kpos*u[3],    0,    -(knr + kpos*u[1] + knfau1),	 -knfau1,    kneg-knfau1},
-		{knfan456,    -kpos*u[3],    0,	 -knfau2,   -(knr + kpos*u[0] + knfau2),    j56_ - knfau1},
+		{-kpos*u[4],    knfan456,    0,	 -knfau2,   -(knr + kpos*u[0] + knfau2),    j56_ - knfau2},
 		{kpos*u[4],   kpos*u[3],    0,	   kpos*u[1],	 kpos*u[0],	 j66_}
-			};
+	};
+	return res;
+}
+//right hand side (chemical reactions)
+arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u){
+	const double kafu12=kaf*u[0]*u[1];
+	const double knfan456 = knfn0 - knfal0*(u[3] + u[4] + u[5]);
+	arma::vec::fixed<6> res = {
+		(-1 - kpos*u[4] - knfan456)*u[0] - kafu12 + kpc*km*u[1] + kar*u[2] + knr*u[3] + kneg*u[5],
+		u[0] - kafu12 + (kpr*km - kpf - kpos*u[3] - knfan456)*u[1] + 2*kac*u[2] + knr*u[4] + (kneg + knegst)*u[5],
+		kafu12 - (kar + kac)*u[2],
+		knfan456*u[0] - (knr + kpos*u[1])*u[3] + kneg*u[5],
+		knfan456*u[1] - (knr + kpos*u[0])*u[4] + (kneg + knegst)*u[5],
+		-(2*kneg + kpos)*u[5] + kpos*(u[0]*u[4] + u[1]*u[3])
+	};
 	return res;
 }

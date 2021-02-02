@@ -4,6 +4,7 @@
 
 // time-independent
 arma::vec::fixed<6> u_ij[I+2][J+2]; //u_ij[i][j] stands for u_i-0.5,j-0.5
+//arma::vec::fixed<6> ukiter_ij[I][J]; //k-th Newton iteration
 arma::sp_mat dmin_mx=arma::sp_mat();
 arma::sp_mat dmax_mx=arma::sp_mat();
 arma::sp_mat dav_mx=arma::sp_mat();
@@ -17,6 +18,7 @@ arma::sp_mat BJL_ij[I][J];
 // time-dependent
 arma::mat::fixed<6,6> BJF_ij[I][J];
 arma::mat::fixed<6,6> B_ij[I][J];
+arma::mat::fixed<6,6> Binv_ij[I][J];
 
 //initialize time-independent and initial condition
 //initial condition TODO
@@ -50,10 +52,24 @@ arma::sp_mat& F_ij(const int& i, const int& j);
 arma::sp_mat& G_ij(const int& i, const int& j);
 
 //TODO
-void newtonStep();
+void newtonStep(const arma::sp_mat dt_phi[I][J]){ //arrays are passed by reference by default, I think
+	int jinit=0;
+	for (int i=1; i<=I; ++i){
+		for (int j=jinit+1; j<=J; j+=2){ //can't proceed unless stop criterion is clear
+		}
+		jinit = (++jinit) % 2;
+	}
+	jinit=1;
+	for (int i=1; i<=I; ++i){
+		for (int j=jinit+1; j<=J; j+=2){
+		}
+		jinit = (++jinit) % 2;
+	}
+}
 //TODO
 void impEuler();
 //TODO
+//don't forget B_ij and Binv_ij stepwise initialization
 void timeStep();
 
 int main(){
