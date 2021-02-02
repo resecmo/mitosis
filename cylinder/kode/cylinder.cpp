@@ -11,8 +11,8 @@ arma::sp_mat dav_mx=arma::sp_mat();
 arma::sp_mat dzer_mx=arma::sp_mat();
 arma::sp_mat C_i[I];
 arma::sp_mat A_i[I];
-arma::sp_mat F_i[I];
-arma::sp_mat G_i[I];
+arma::sp_mat F_i[2];
+arma::sp_mat G_i[2];
 arma::sp_mat BJL_ij[I][J];
 
 // time-dependent
