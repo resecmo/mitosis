@@ -1,4 +1,5 @@
 #include "/home/osetr/Desktop/mitosis/cylinder/kode/parameters.h"
+//didn't figure out how to make compiler use relative path to header
 #include<armadillo>
 #include<iostream>
 
@@ -9,11 +10,11 @@ arma::sp_mat dmin_mx=arma::sp_mat();
 arma::sp_mat dmax_mx=arma::sp_mat();
 arma::sp_mat dav_mx=arma::sp_mat();
 arma::sp_mat dzer_mx=arma::sp_mat();
-arma::sp_mat C_i[I];
+arma::sp_mat C_i[I];//these 4 matrices will have function(i,j) interfaces
 arma::sp_mat A_i[I];
-arma::sp_mat F_i[2];
-arma::sp_mat G_i[2];
-arma::sp_mat BJL_ij[I][J];
+arma::sp_mat F_i[3];
+arma::sp_mat G_i[3];
+arma::sp_mat BJL_ij[I][J];//no E matrix, don't forget to add u_ij separately
 
 // time-dependent
 arma::mat::fixed<6,6> BJF_ij[I][J];
@@ -44,12 +45,57 @@ arma::sp_mat& diffz_coeff(const int& i, const int& j){
 	return dzer_mx;
 } // diffz_coeff(i,j) stands for d_i+0.5,j
 
-void initializeCAFGBJL();
+void initializeCAFGBJL(){
+	for (int i=0; i<I; ++i){
+		C_i[i] = (ht*(i + 1) / (hr*hr*(i + 0.5))) * diffr_coeff(i+1,0);
+		A_i[i] = (ht*i / (hr*hr*(i+0.5))) * diffr_coeff(i,0);
+	}
+	F_i[0] = dzer_mx;
+	F_i[1] =(ht / (hz*hz)) * dmin_mx;
+	F_i[2] =(ht / (hz*hz)) * dmax_mx;
+	G_i[0] = dzer_mx;
+	G_i[1] =(ht / (hz*hz)) * dmin_mx;
+	G_i[2] =(ht / (hz*hz)) * dmax_mx;
+	for (int i=0; i<I; ++i){
+		for (int j=0; j<J; ++j){
+			BJL_ij[i][j] = (ht / (hr*hr*(i+0.5))) * ((i + 1)*diffr_coeff(i+1,j) + i*diffr_coeff(i,j))
+				       + (ht / (hz*hz)) * (diffz_coeff(i,j+1) + diffz_coeff(i,j));
+		}
+	}
+
+}
 //1D->2D
-arma::sp_mat& C_ij(const int& i, const int& j);
-arma::sp_mat& A_ij(const int& i, const int& j);
-arma::sp_mat& F_ij(const int& i, const int& j);
-arma::sp_mat& G_ij(const int& i, const int& j);
+arma::sp_mat& C_ij(const int& i, const int& j){
+	return C_i[i];
+}
+arma::sp_mat& A_ij(const int& i, const int& j){
+	return A_i[i];
+}
+arma::sp_mat F_ij(const int& i, const int& j){
+	/* question is what return type should be (to & or not to &)?
+	 * another question is who optimizes better -- me or compiler?
+	if (j < J-1){
+		if (i > 0) {
+			return F_i[1];
+		}
+		return F_i[2];
+	}
+	return F_i[0];
+	*/
+	return (j < J-1)*((i > 0) ? F_i[1] : F_i[2]) + dzer_mx;
+}
+arma::sp_mat G_ij(const int& i, const int& j){
+	/* same questions here
+	if (j > 0){
+		if (i > 0){
+			return G_i[1];
+		}
+		return G_i[2];
+	}
+	return G_i[0];
+	*/
+	return (j > 0)*((i > 0) ? G_i[1] : G_i[2]) + dzer_mx;
+}
 
 //TODO
 void newtonStep(const arma::sp_mat dt_phi[I][J]){ //arrays are passed by reference by default, I think
