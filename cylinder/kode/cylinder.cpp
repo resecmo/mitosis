@@ -14,9 +14,11 @@ arma::sp_mat C_i[I];//these 4 matrices will have function(i,j) interfaces
 arma::sp_mat A_i[I];
 arma::sp_mat F_i[3];
 arma::sp_mat G_i[3];
+//jacobianless
 arma::sp_mat BJL_ij[I][J];//no E matrix, don't forget to add u_ij separately
 
 // time-dependent
+// jacobianful
 arma::mat::fixed<6,6> BJF_ij[I][J];
 arma::mat::fixed<6,6> B_ij[I][J];
 arma::mat::fixed<6,6> Binv_ij[I][J];
@@ -33,14 +35,14 @@ void initializeDiffusion(){
 
 //1D->2D
 arma::sp_mat& diffr_coeff(const int& i, const int& j){
-	if (i>1 && i<=I) {return dmin_mx;}
+	if (i>1 && i<I) {return dmin_mx;}
 	if (i==1) {return dav_mx;}
 	return dzer_mx;
 } // diffr_coeff(i,j) stands for d_i,j+0.5
 arma::sp_mat& diffz_coeff(const int& i, const int& j){
-	if (j>0 && j<=J){
-		if (i>1) {return dmin_mx;}
-		if (i==1) {return dmax_mx;}
+	if (j>0 && j<J){
+		if (i>0) {return dmin_mx;}
+		return dmax_mx;
 	}
 	return dzer_mx;
 } // diffz_coeff(i,j) stands for d_i+0.5,j
