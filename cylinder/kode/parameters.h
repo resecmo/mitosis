@@ -26,7 +26,7 @@ const double n0=1;
 
 const double dmin=1;
 const double dmax=10;
-const double dav=0.5*(dmin+dmax)/(dmin*dmax);
+const double dav=2 * dmin * dmax / (dmin+dmax);
 
 //following are to optimize jacobian calculation
 const double j12_ = -1 - kpc*km;
