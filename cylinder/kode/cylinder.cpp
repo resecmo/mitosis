@@ -5,9 +5,9 @@
 
 // time-independent
 arma::vec::fixed<6> u_ij[I+2][J+2]; //u_ij[i][j] stands for u_i-0.5,j-0.5
-//arma::vec::fixed<6> ukiter_ij[I][J]; //k-th Newton iteration
-arma::sp_mat dmin_mx=arma::sp_mat();
-arma::sp_mat dmax_mx=arma::sp_mat();
+arma::vec::fixed<6> ukiter_ij[I][J]; //k-th Newton iteration
+arma::sp_mat dbulk_mx=arma::sp_mat();
+arma::sp_mat dmt_mx=arma::sp_mat();
 arma::sp_mat dav_mx=arma::sp_mat();
 arma::sp_mat dzer_mx=arma::sp_mat();
 arma::sp_mat C_i[I];//these 4 matrices will have function(i,j) interfaces
@@ -28,21 +28,26 @@ arma::mat::fixed<6,6> Binv_ij[I][J];
 void initializeDiffusion(){
 	for (int i=0; i<3; ++i){ //should zeros be initialized???
 		dav_mx(i,i)=dav;
-		dmax_mx(i,i)=dmax;
-		dmin_mx(i,i)=dmin;
+		dmt_mx(i,i)=dmt;
+		dbulk_mx(i,i)=dbulk;
 	}
 }
 
 //1D->2D
+//TODO 6 of the following
+bool r_in_mt(const int& i, const int& j);
+bool r_in_bulk(const int& i, const int& j);
 arma::sp_mat& diffr_coeff(const int& i, const int& j){
-	if (i>1 && i<I) {return dmin_mx;}
+	if (i>1 && i<I) {return dbulk_mx;}
 	if (i==1) {return dav_mx;}
 	return dzer_mx;
 } // diffr_coeff(i,j) stands for d_i,j+0.5
+bool z_in_mt(const int& i, const int& j);
+bool z_in_bulk(const int& i, const int& j);
 arma::sp_mat& diffz_coeff(const int& i, const int& j){
 	if (j>0 && j<J){
-		if (i>0) {return dmin_mx;}
-		return dmax_mx;
+		if (i>0) {return dbulk_mx;}
+		return dmt_mx;
 	}
 	return dzer_mx;
 } // diffz_coeff(i,j) stands for d_i+0.5,j
@@ -53,11 +58,11 @@ void initializeCAFGBJL(){
 		A_i[i] = (ht*i / (hr*hr*(i+0.5))) * diffr_coeff(i,0);
 	}
 	F_i[0] = dzer_mx;
-	F_i[1] =(ht / (hz*hz)) * dmin_mx;
-	F_i[2] =(ht / (hz*hz)) * dmax_mx;
+	F_i[1] =(ht / (hz*hz)) * dbulk_mx;
+	F_i[2] =(ht / (hz*hz)) * dmt_mx;
 	G_i[0] = dzer_mx;
-	G_i[1] =(ht / (hz*hz)) * dmin_mx;
-	G_i[2] =(ht / (hz*hz)) * dmax_mx;
+	G_i[1] =(ht / (hz*hz)) * dbulk_mx;
+	G_i[2] =(ht / (hz*hz)) * dmt_mx;
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
 			BJL_ij[i][j] = (ht / (hr*hr*(i+0.5))) * ((i + 1)*diffr_coeff(i+1,j) + i*diffr_coeff(i,j))
@@ -100,7 +105,7 @@ arma::sp_mat G_ij(const int& i, const int& j){
 }
 
 //TODO
-void newtonStep(const arma::sp_mat dt_phi[I][J]){ //arrays are passed by reference by default, I think
+void newtonStep(const arma::vec::fixed<6> dt_phi[I][J]){ //arrays are passed by reference by default, I think
 	int jinit=0;
 	for (int i=1; i<=I; ++i){
 		for (int j=jinit+1; j<=J; j+=2){ //can't proceed unless stop criterion is clear
@@ -115,7 +120,22 @@ void newtonStep(const arma::sp_mat dt_phi[I][J]){ //arrays are passed by referen
 	}
 }
 //TODO
-void impEuler();
+bool stopcond();
+//TODO
+void impEuler(){
+	arma::vec::fixed<6> dt_phi[I][J];
+	for (int i=0; i<I; ++i){
+		for (int j=0; j<J; ++j){
+			const arma::vec::fixed<6> uij = u_ij[i][j];
+			BJF_ij[i][j] = - ourJac(uij); //mind the sign
+			dt_phi[i][j] = ht*(rhs(uij) + (BJF_ij[i][j]*uij));
+			ukiter_ij[i][j] = uij; // is it a good idea?
+		}
+	}
+	do{
+		newtonStep(dt_phi);
+	} while (!stopcond());
+}
 //TODO
 //don't forget B_ij and Binv_ij stepwise initialization
 void timeStep();

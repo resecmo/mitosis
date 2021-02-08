@@ -4,9 +4,11 @@ const int I=100;
 const int J=100;
 const double R=1;
 const double Z=1;
+const double RMT=0.01;
 const double hr=R/I;
 const double hz=Z/J;
 const double ht=0.1;
+const int rmti=I*RMT/R; //might require +-1 correction
 
 const double kaf=1;
 const double kar=1;
@@ -24,9 +26,9 @@ const double knegst=1;
 const double alpha=1;
 const double n0=1;
 
-const double dmin=1;
-const double dmax=10;
-const double dav=2 * dmin * dmax / (dmin+dmax);
+const double dbulk=1;
+const double dmt=0.1;
+const double dav=2 * dbulk * dmt / (dbulk+dmt);
 
 //following are to optimize jacobian calculation
 const double j12_ = -1 - kpc*km;
