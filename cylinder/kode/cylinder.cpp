@@ -2,10 +2,11 @@
 //didn't figure out how to make compiler use relative path to header
 #include<armadillo>
 #include<iostream>
+#include<algorithm>
 
 // time-independent
 arma::vec::fixed<6> u_ij[I+2][J+2]; //u_ij[i][j] stands for u_i-0.5,j-0.5
-arma::vec::fixed<6> ukiter_ij[I][J]; //k-th Newton iteration
+//arma::vec::fixed<6> ukiter_ij[I][J]; //k-th Newton iteration
 arma::sp_mat dbulk_mx=arma::sp_mat();
 arma::sp_mat dmt_mx=arma::sp_mat();
 arma::sp_mat dav_mx=arma::sp_mat();
@@ -15,7 +16,8 @@ arma::sp_mat A_i[I];
 arma::sp_mat F_i[3];
 arma::sp_mat G_i[3];
 //jacobianless
-arma::sp_mat BJL_ij[I][J];//no E matrix, don't forget to add u_ij separately
+arma::sp_mat BJL_ij[I][J];
+arma::sp_mat E_mx;
 
 // time-dependent
 // jacobianful
@@ -54,7 +56,7 @@ arma::sp_mat& diffz_coeff(const int& i, const int& j){
 
 void initializeCAFGBJL(){
 	for (int i=0; i<I; ++i){
-		C_i[i] = (ht*(i + 1) / (hr*hr*(i + 0.5))) * diffr_coeff(i+1,0);
+		C_i[i] = (ht*(i + 1.) / (hr*hr*(i + 0.5))) * diffr_coeff(i+1,0);
 		A_i[i] = (ht*i / (hr*hr*(i+0.5))) * diffr_coeff(i,0);
 	}
 	F_i[0] = dzer_mx;
@@ -63,9 +65,12 @@ void initializeCAFGBJL(){
 	G_i[0] = dzer_mx;
 	G_i[1] =(ht / (hz*hz)) * dbulk_mx;
 	G_i[2] =(ht / (hz*hz)) * dmt_mx;
+	for (int i=0; i<6; ++i){
+		E_mx(i,i)=1;
+	}
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
-			BJL_ij[i][j] = (ht / (hr*hr*(i+0.5))) * ((i + 1)*diffr_coeff(i+1,j) + i*diffr_coeff(i,j))
+			BJL_ij[i][j] = E_mx + (ht / (hr*hr*(i+0.5))) * ((i + 1.)*diffr_coeff(i+1,j) + i*diffr_coeff(i,j))
 				       + (ht / (hz*hz)) * (diffz_coeff(i,j+1) + diffz_coeff(i,j));
 		}
 	}
@@ -105,36 +110,72 @@ arma::sp_mat G_ij(const int& i, const int& j){
 }
 
 //TODO
-void newtonStep(const arma::vec::fixed<6> dt_phi[I][J]){ //arrays are passed by reference by default, I think
+bool satisfied=false;
+/* obscure
+void update(const int& i, const int& j,
+		arma::vec::fixed<6>& uij_prev,
+		double& shift, double& worstshift,
+		const arma::vec::fixed<6> dt_phi[I][J]){ //arrays are passed by reference by default, I think
+	uij_prev=u_ij[i+1][j+1];
+	u_ij[i+1][j+1]=Binv_ij[i][j]
+		   * (dt_phi[i][j] 
+		      + C_ij(i,j)*u_ij[i+2][j+1]
+		      + A_ij(i,j)*u_ij[i][j+1]
+		      + F_ij(i,j)*u_ij[i+1][j+2]
+		      + G_ij(i,j)*u_ij[i+1][j]);
+	shift = norm(u_ij[i+1][j+1] - uij_prev, "inf")
+		/ std::max(1., norm(uij_prev, "inf"));
+	worstshift = std::max(worstshift, shift);
+}*/
+arma::vec::fixed<6> dt_phi[I][J];
+void newtonStep(){ //arrays are passed by reference by default, I think
 	int jinit=0;
+	double worstshift=0;
+	double shift=0;
+	arma::vec::fixed<6> uij_prev;
+	auto update = [&](const int& i, const int& j){
+		uij_prev=u_ij[i+1][j+1];
+		u_ij[i+1][j+1]=Binv_ij[i][j]
+			   * (dt_phi[i][j] 
+			      + C_ij(i,j)*u_ij[i+2][j+1]
+			      + A_ij(i,j)*u_ij[i][j+1]
+			      + F_ij(i,j)*u_ij[i+1][j+2]
+			      + G_ij(i,j)*u_ij[i+1][j]);
+		shift = norm(u_ij[i+1][j+1] - uij_prev, "inf")
+			/ std::max(1., norm(uij_prev, "inf"));
+		worstshift = std::max(worstshift, shift);
+	};
 	for (int i=1; i<=I; ++i){
-		for (int j=jinit+1; j<=J; j+=2){ //can't proceed unless stop criterion is clear
+		for (int j=jinit+1; j<=J; j+=2){
+			update(i, j);//, uij_prev, shift, worstshift, dt_phi);
 		}
-		jinit = (++jinit) % 2;
+		jinit = (jinit + 1) % 2;
 	}
 	jinit=1;
 	for (int i=1; i<=I; ++i){
 		for (int j=jinit+1; j<=J; j+=2){
+			update(i, j);//, uij_prev, shift, worstshift, dt_phi);
 		}
-		jinit = (++jinit) % 2;
+		jinit = (jinit + 1) % 2;
 	}
+	satisfied = worstshift < nepsilon;
 }
 //TODO
-bool stopcond();
-//TODO
 void impEuler(){
-	arma::vec::fixed<6> dt_phi[I][J];
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
-			const arma::vec::fixed<6> uij = u_ij[i][j];
+			const arma::vec::fixed<6> uij = u_ij[i+1][j+1];
 			BJF_ij[i][j] = - ourJac(uij); //mind the sign
-			dt_phi[i][j] = ht*(rhs(uij) + (BJF_ij[i][j]*uij));
-			ukiter_ij[i][j] = uij; // is it a good idea?
+			B_ij[i][j] = BJL_ij[i][j] + BJF_ij[i][j];
+			Binv_ij[i][j] = B_ij[i][j].i();
+			dt_phi[i][j] = ht*(rhs(uij) + (BJF_ij[i][j]*uij)); //SIGN!!!
+			//u_ij[i][j] = uij; // I forgot what I meant
 		}
 	}
 	do{
-		newtonStep(dt_phi);
-	} while (!stopcond());
+		newtonStep();
+	} while (!satisfied);
+	satisfied=false;
 }
 //TODO
 //don't forget B_ij and Binv_ij stepwise initialization

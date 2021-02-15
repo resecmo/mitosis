@@ -1,5 +1,6 @@
 #include <armadillo>
 
+const double nepsilon=0.001; //epsilon for newton iterations
 const int I=100;
 const int J=100;
 const double R=1;
