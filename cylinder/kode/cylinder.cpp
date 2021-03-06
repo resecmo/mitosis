@@ -36,19 +36,31 @@ void set_init_cond_from_file(const std::string& path){ //IxJ.csv
 	std::string line;
 	int i=0;
 	int j=0;
+	int k=0;
 	if (istream.is_open()){
 		while (getline(istream,line)){
 			if (j>=J){throw "J value exceeded";}
 			std::stringstream ss(line);
-			std::vector<double> nums;
-			std::string snum;
-			while (getline(ss, snum, ',')){
-				nums.push_back(stod(snum));
-			}
-			for (const double& a : nums){
+			std::vector<std::vector<double>> us;
+			//std::string sus;
+			std::vector<double> u;
+			std::string su;
+			std::string _su;
+			while (getline(ss, su, ';')){
 				if (i>=I){throw "I value exceeded";}
-				u_ij[i][j] = a;
+				std::stringstream _ss(su);
+				while (getline(_ss, _su, ',')){
+					if (k>=6){throw "vector of dimension gt 6";}
+					u.push_back(stod(_su));
+					++k;
+				}
+				us.push_back(u);
+				u.clear();
+				k=0;
 				++i;
+			}
+			for (const arma::vec& _u : us){
+				u_ij[i][j] = _u;
 			}
 			i=0;
 			++j;
