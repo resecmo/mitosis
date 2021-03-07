@@ -1,0 +1,411 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage[left=20mm, right=20mm, top=17mm]{geometry}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{cases}
+\partial_{t}u-D\Delta u=0\\
+u(\overrightarrow{r},0)=v(\overrightarrow{r})
+\end{cases}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{cases}
+u=R(r)T(t)\\
+\partial_{r}u(0,t)=\partial_{r}u(r_{0},t)=0
+\end{cases}\label{eq:varsplit_boundcond}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R\partial_{t}T=T\frac{D}{r}\partial_{r}r\partial_{r}R
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial_{t}T}{T}=\frac{D\partial_{r}r\partial_{r}R}{rR}=-\gamma
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+T=T_{0}e^{-\gamma t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+r^{2}\partial_{r}^{2}R+r\partial_{r}R+\frac{\gamma}{D}r^{2}R=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+x^{2}\partial_{x}^{2}R+x\partial_{x}R+(x^{2}-0^{2})R=0,\;x=\sqrt{\lambda}r,\;\lambda=\frac{\gamma}{D}\label{eq:bessel}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Любое 
+\begin_inset Formula $J_{0}(x)$
+\end_inset
+
+, удовлетворяет (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bessel"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) – т.
+ е.
+ имеем однопараметрическое семейство решений.
+ Граничным условиям из (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:varsplit_boundcond"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) удовлетворяют только такие 
+\begin_inset Formula $J_{0}(x)$
+\end_inset
+
+, что
+\begin_inset Formula 
+\begin{equation}
+\partial_{x}J_{0}(0)=\partial_{x}J_{0}(\sqrt{\lambda}r_{0})=0\label{eq:filter}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\partial_{x}J_{0}(0)=0$
+\end_inset
+
+ для любой функции из нашего семейства.
+\begin_inset Formula 
+\[
+\partial_{x}\frac{J_{\nu}(x)}{x^{\nu}}=-\frac{J_{\nu+1}(x)}{x^{\nu}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\partial_{x}J_{0}(x)=-J_{1}(x)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Из (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:filter"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) тогда имеем
+\begin_inset Formula 
+\[
+J_{1}(\sqrt{\lambda}r_{0})=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Обозначим 
+\begin_inset Formula $z_{m}^{a}$
+\end_inset
+
+ – 
+\begin_inset Formula $m$
+\end_inset
+
+-ый нуль функции 
+\begin_inset Formula $J_{a}(x)$
+\end_inset
+
+, тогда (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:filter"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) переходит в
+\begin_inset Formula 
+\[
+\sqrt{\lambda_{m}}r_{0}=z_{m}^{1}=z_{m}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\lambda_{m}=\left(\frac{z_{m}}{r_{0}}\right)^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\gamma_{m}=D\left(\frac{z_{m}}{r_{0}}\right)^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Тогда возьмём 
+\begin_inset Formula $T_{0}=1$
+\end_inset
+
+, целое 
+\begin_inset Formula $m>0$
+\end_inset
+
+, начальные условия 
+\begin_inset Formula $v=c_{0}J_{0}\left(\frac{z_{m}}{r_{0}}r\right)$
+\end_inset
+
+ и решением будет
+\begin_inset Formula 
+\[
+u(r,t)=c_{0}J_{0}\left(\frac{z_{m}}{r_{0}}r\right)e^{-D\left(\frac{z_{m}}{r_{0}}\right)^{2}t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Его и будем сравнивать с численным.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Далее идёт нерелевантная чепуха, которую теперь просто жалко стирать.
+\end_layout
+
+\begin_layout Standard
+К счастью, для любого целого 
+\begin_inset Formula $a$
+\end_inset
+
+ любая хорошая функция 
+\begin_inset Formula $f\left(r\in\left(0,r_{0}\right]\right)$
+\end_inset
+
+, 
+\begin_inset Formula $f\left(r\rightarrow0\right)$
+\end_inset
+
+ – огр.
+ и 
+\begin_inset Formula $f\left(r_{0}\right)=0$
+\end_inset
+
+, представима как хорошо сходящийся ряд
+\begin_inset Formula 
+\[
+\sum_{m}f_{m}J_{a}\left(\frac{z_{m}^{a}}{r_{0}}r\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+f_{m}=\frac{\intop_{0}^{r_{0}}f(r)J_{a}(\sqrt{\lambda_{m}^{a}}r)rdr}{\frac{r_{0}^{2}}{2}\left[\partial_{x}J_{a}(z_{m}^{a})\right]^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Мы попробуем поступить по-другому, и будем верить, что всё получится: возьмём
+ хорошую функцию 
+\begin_inset Formula $f\left(r\in\left[0,r_{0}\right]\right),$
+\end_inset
+
+т.
+ ч.
+ 
+\begin_inset Formula $\partial_{r}f(0)=\partial_{r}f(r_{0})=0$
+\end_inset
+
+ и представим её как ряд
+\begin_inset Formula 
+\[
+\sum_{m}f_{m}J_{0}\left(\frac{z_{m}}{r_{0}}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
