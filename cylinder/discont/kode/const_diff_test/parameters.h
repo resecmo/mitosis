@@ -8,7 +8,7 @@ const double Z=1;
 const double RMT=0;
 const double hr=R/I;
 const double hz=Z/J;
-const double ht=0.1;
+const double ht=0.01;
 const int rmti=I*RMT/R; //might require +-1 correction
 
 const double kaf=1;
@@ -27,8 +27,8 @@ const double knegst=1;
 const double alpha=1;
 const double n0=1;
 
-const double dbulk=1;
-const double dmt=0.1;
+const double dbulk=0.1;
+const double dmt=0.01;
 const double dav=2 * dbulk * dmt / (dbulk+dmt);
 
 //following are to optimize jacobian calculation

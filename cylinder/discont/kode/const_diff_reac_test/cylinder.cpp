@@ -1,4 +1,5 @@
-#include "/home/osetr/Desktop/mitosis/cylinder/kode/parameters.h"
+
+#include "/home/osetr/Desktop/mitosis/cylinder/kode/const_diff_test/parameters.hpp"
 //didn't figure out how to make compiler use relative path to header
 #include<armadillo>
 #include<iostream>
@@ -31,7 +32,10 @@ arma::mat::fixed<6,6> B_ij[I][J];
 arma::mat::fixed<6,6> Binv_ij[I][J];
 
 //initialize time-independent and initial condition
-void set_init_cond_from_file(const std::string& path){ //IxJ.csv
+auto astest(const int& i, const int& j){//toRemove
+	return u_ij[i+1][j+1][1];
+}
+void set_init_cond_from_file(const std::string& path){ //JxI.csv
 	std::ifstream istream(path);
 	std::string line;
 	int i=0;
@@ -54,14 +58,20 @@ void set_init_cond_from_file(const std::string& path){ //IxJ.csv
 					u.push_back(stod(_su));
 					++k;
 				}
-				us.push_back(u);
+				arma::vec _u(u);
+				u_ij[i+1][j+1] = _u;
+				//astest = _u(1); //toRemove
+				//us.push_back(u);
 				u.clear();
 				k=0;
 				++i;
 			}
-			for (const arma::vec& _u : us){
-				u_ij[i][j] = _u;
+			/*
+			for (arma::vec _u : us){
+				u_ij[i+1][j+1] = _u;
+				//astest = _u(1); //toRemove
 			}
+			*/
 			i=0;
 			++j;
 		}
@@ -82,7 +92,7 @@ bool r_in_mt(const int& i, const int& j){
 bool r_in_bulk(const int& i, const int& j){
 	return i > rmti && i <= I;
 }
-bool r_in_av(const int& i, const int& j){
+bool r_in_av(const int& i, const int& j){//is incorrect and not called
 	return i == rmti;
 }
 bool r_in_vanish(const int& i, const int& j){
@@ -90,9 +100,9 @@ bool r_in_vanish(const int& i, const int& j){
 }
 arma::sp_mat& diffr_coeff(const int& i, const int& j){
 	if (r_in_bulk(i,j)) {return dbulk_mx;}
-	if (r_in_mt(i,j)) {return dav_mx;}
-	if (r_in_av(i,j)) {return dav_mx;}
-	return dzer_mx;
+	if (r_in_mt(i,j)) {return dmt_mx;}
+	if (r_in_vanish(i,j)) {return dzer_mx;}
+	return dav_mx;
 } // diffr_coeff(i,j) stands for d_i,j+0.5
 bool z_in_mt(const int& i, const int& j){
 	return i < rmti && j > 0 && j <= J;
@@ -104,12 +114,18 @@ bool z_in_av(const int& i, const int& j);
 bool z_in_vanish(const int& i, const int& j){
 	return j == 0 || j == J+1;
 }
-arma::sp_mat& diffz_coeff(const int& i, const int& j){
+arma::sp_mat& diffz_coeff(const int& i, const int& j){//??? 
+	if (z_in_bulk(i,j)) {return dbulk_mx;}
+	if (z_in_mt(i,j)) {return dmt_mx;}
+	if (z_in_vanish(i,j)) {return dzer_mx;}
+	return dav_mx;
+	/*
 	if (j > 0 && j <= J){
 		if (i >= rmti) {return dbulk_mx;}
 		return dmt_mx;
 	}
 	return dzer_mx;
+	*/
 } // diffz_coeff(i,j) stands for d_i+0.5,j
 
 void initializeCAFGBJL(){
@@ -152,7 +168,7 @@ arma::sp_mat F_ij(const int& i, const int& j){
 	}
 	return F_i[0];
 	*/
-	return (j < J-1)*((i > 0) ? F_i[1] : F_i[2]) + dzer_mx;
+	return (j < J-1)*((i > rmti) ? F_i[1] : F_i[2]) + dzer_mx;
 }
 arma::sp_mat G_ij(const int& i, const int& j){
 	/* same questions here
@@ -164,7 +180,7 @@ arma::sp_mat G_ij(const int& i, const int& j){
 	}
 	return G_i[0];
 	*/
-	return (j > 0)*((i > 0) ? G_i[1] : G_i[2]) + dzer_mx;
+	return (j > 0)*((i > rmti) ? G_i[1] : G_i[2]) + dzer_mx;
 }
 
 //TODO
@@ -220,6 +236,10 @@ void newtonStep(){ //arrays are passed by reference by default, I think
 	satisfied = worstshift < nepsilon;
 }
 //TODO
+int max_newton_steps=0;
+int newton_steps=0;
+arma::vec::fixed<6> u11; //toRemove
+double _u11;
 void impEuler(){
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
@@ -227,23 +247,28 @@ void impEuler(){
 			BJF_ij[i][j] = - ourJac(uij); //mind the sign
 			B_ij[i][j] = BJL_ij[i][j] + BJF_ij[i][j];
 			Binv_ij[i][j] = B_ij[i][j].i();
-			dt_phi[i][j] = ht*(rhs(uij) + (BJF_ij[i][j]*uij)); //SIGN!!!
+			dt_phi[i][j] = ht*(rhs(uij) + (BJF_ij[i][j]*uij)) + uij; //SIGN!!!
 			//u_ij[i+1][j+1] = uij; // I forgot what I meant
 		}
 	}
+	newton_steps=0;
 	do{
 		newtonStep();
+		++newton_steps;
+		u11 = u_ij[1][1]; //toRemove
+		_u11 = u11[1];
 	} while (!satisfied);
 	satisfied=false;
+	max_newton_steps = (newton_steps > max_newton_steps)?newton_steps:max_newton_steps;
 }
 //TODO
 //don't forget B_ij and Binv_ij stepwise initialization
 void stamp(std::ofstream& csv_stream){
-	for (int i=1; i <= I; ++i){
-		for (int j=1; j<J; ++j){
+	for (int j=1; j <= J; ++j){
+		for (int i=1; i<I; ++i){
 			csv_stream << u_ij[i][j][1] << ",";
 		}
-		csv_stream << u_ij[i][J] << std::endl;
+		csv_stream << u_ij[I][j][1] << std::endl;
 	}
 }
 void timeStep(std::ofstream& csv_stream){ // i wonder if ofstream should better be reopened at each call
@@ -261,10 +286,10 @@ void saveinfo(const std::string& save_path, int argc, char* argv[]){
 	if (infostream.is_open()){
 		for (int i=0; i<argc-1; ++i){
 			word = argv[i];
-			infostream << word << " ";
+			infostream << argv[argc-1] << " ";
 		}
 		infostream << word << std::endl;
-	} else {std::cout << "Can't save " << save_path << ".csv" << std::endl;}
+	} else {std::cout << "Can't save " << save_path << ".info" << std::endl;}
 }
 
 int main(int argc, char* argv[]){
@@ -296,6 +321,7 @@ int main(int argc, char* argv[]){
 	int timesteps = time/ht;
 	initializeDiffusion();
 	initializeCAFGBJL();
+	set_init_cond_from_file(init_cond_path);
 	// larmadillo usage
 	/*
 	arma::vec v({1,2,3});
@@ -317,5 +343,7 @@ int main(int argc, char* argv[]){
 		csv_stream.close();
 	} else {std::cout << "Can't save " << save_path << ".csv" << std::endl;}
 	saveinfo(save_path, argc, argv);
+	std::cout << "max Newton steps: " << max_newton_steps << std::endl;
+	std::cout << "number of timesteps: " << timesteps << std::endl;
 	return 0;
 }

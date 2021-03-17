@@ -164,21 +164,11 @@ x^{2}\partial_{x}^{2}R+x\partial_{x}R+(x^{2}-0^{2})R=0,\;x=\sqrt{\lambda}r,\;\la
 \end_layout
 
 \begin_layout Standard
-Любое 
+Любая 
 \begin_inset Formula $J_{0}(x)$
 \end_inset
 
-, удовлетворяет (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:bessel"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-) – т.
+, удовлетворяет однородному уравнению – т.
  е.
  имеем однопараметрическое семейство решений.
  Граничным условиям из (
@@ -320,13 +310,13 @@ noprefix "false"
 \end_inset
 
 , начальные условия 
-\begin_inset Formula $v=c_{0}J_{0}\left(\frac{z_{m}}{r_{0}}r\right)$
+\begin_inset Formula $v=J_{0}\left(\frac{z_{m}}{r_{0}}r\right)$
 \end_inset
 
  и решением будет
 \begin_inset Formula 
 \[
-u(r,t)=c_{0}J_{0}\left(\frac{z_{m}}{r_{0}}r\right)e^{-D\left(\frac{z_{m}}{r_{0}}\right)^{2}t}
+u(r,t)=J_{0}\left(\frac{z_{m}}{r_{0}}r\right)e^{-D\left(\frac{z_{m}}{r_{0}}\right)^{2}t}
 \]
 
 \end_inset
@@ -336,75 +326,6 @@ u(r,t)=c_{0}J_{0}\left(\frac{z_{m}}{r_{0}}r\right)e^{-D\left(\frac{z_{m}}{r_{0}}
 
 \begin_layout Standard
 Его и будем сравнивать с численным.
-\end_layout
-
-\begin_layout Standard
-
-\series bold
-Далее идёт нерелевантная чепуха, которую теперь просто жалко стирать.
-\end_layout
-
-\begin_layout Standard
-К счастью, для любого целого 
-\begin_inset Formula $a$
-\end_inset
-
- любая хорошая функция 
-\begin_inset Formula $f\left(r\in\left(0,r_{0}\right]\right)$
-\end_inset
-
-, 
-\begin_inset Formula $f\left(r\rightarrow0\right)$
-\end_inset
-
- – огр.
- и 
-\begin_inset Formula $f\left(r_{0}\right)=0$
-\end_inset
-
-, представима как хорошо сходящийся ряд
-\begin_inset Formula 
-\[
-\sum_{m}f_{m}J_{a}\left(\frac{z_{m}^{a}}{r_{0}}r\right)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-f_{m}=\frac{\intop_{0}^{r_{0}}f(r)J_{a}(\sqrt{\lambda_{m}^{a}}r)rdr}{\frac{r_{0}^{2}}{2}\left[\partial_{x}J_{a}(z_{m}^{a})\right]^{2}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Мы попробуем поступить по-другому, и будем верить, что всё получится: возьмём
- хорошую функцию 
-\begin_inset Formula $f\left(r\in\left[0,r_{0}\right]\right),$
-\end_inset
-
-т.
- ч.
- 
-\begin_inset Formula $\partial_{r}f(0)=\partial_{r}f(r_{0})=0$
-\end_inset
-
- и представим её как ряд
-\begin_inset Formula 
-\[
-\sum_{m}f_{m}J_{0}\left(\frac{z_{m}}{r_{0}}\right)
-\]
-
-\end_inset
-
-
 \end_layout
 
 \end_body
