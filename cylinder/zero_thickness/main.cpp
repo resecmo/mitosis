@@ -83,7 +83,7 @@ void step(){
         new_conc[i] = p[i] * new_conc[i+1] + q[i];
     }
 
-    std::copy(new_conc, new_conc+(L-1), conc);
+    std::copy(new_conc, new_conc+L, conc);
     //return new_conc;
 }
 
