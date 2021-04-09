@@ -53,7 +53,7 @@ void step(){
     // A_last * u[L-2] + B_last * u[L-1] == phi_last
     mat44 A_last = eye(4, 4) / 6 - 2 * tau * D / (h*h) - tau * jac(conc[L-2]) / 6;
     mat44 B_last = eye(4, 4) * 5 / 6 + 2 * tau * D / (h*h) - tau * jac(conc[L-1]) * 5 / 6;
-    vec4 phi_last = conc[L-2] / 6 + conc[L-1] * 5 / 6 + f(conc[L-2]) / 6 + f(conc[L-1]) * 5 / 6 - jac(conc[L-2]) * conc[L-2] / 6 - jac(conc[L-1]) * conc[L-1] * 5 / 6;
+    vec4 phi_last = conc[L-2] / 6 + conc[L-1] * 5 / 6 + tau * (f(conc[L-2]) / 6 + f(conc[L-1]) * 5 / 6 - jac(conc[L-2]) * conc[L-2] / 6 - jac(conc[L-1]) * conc[L-1] * 5 / 6);
     new_conc[L-1] = inv(A_last * p[L-2] + B_last) * (phi_last - A_last * q[L-2]);
     for (int i = L - 2; i > -1; i--){
         new_conc[i] = p[i] * new_conc[i+1] + q[i];
