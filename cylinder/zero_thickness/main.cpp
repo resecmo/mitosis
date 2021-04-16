@@ -33,8 +33,8 @@ vec4 phi(vec4 u_prev, vec4 u_cur, vec4 u_next) {
 } 
 
 void initialize() {
-    for (auto &vector: conc) {
-        vector = vec({1,1,1,1});
+    for (int i = 0; i < L; i++) {
+        conc[i] = vec({1,1,1,1});
     }
 }
 
@@ -43,15 +43,20 @@ void step(){
     mat44 p[L];
     vec4 q[L];
 
-    p[0] = eye(4, 4);
-    q[0] = zeros(4, 1);
+    // A_first * u[0] + B_first * u[1] == phi_first
+    mat44 A_first = eye(4,4) * 5 / 6 + 2 * tau / (h*h) * D - tau * jac(conc[0]) * 5 / 6;
+    mat44 B_first = eye(4,4) / 6     - 2 * tau / (h*h) * D - tau * jac(conc[1]) / 6;
+    vec4 phi_first = conc[0] * 5 / 6 + conc[1] / 6 + tau * (f(conc[0]) * 5 / 6 + f(conc[1]) / 6	- jac(conc[0]) * conc[0] * 5 / 6 - jac(conc[1]) * conc[1] / 6);
+    p[0] = - inv(A_first) * B_first;
+    q[0] = inv(A_first) * phi_first;
+
     for (int i = 1; i < L-1; i++) {
         p[i] = - inv(A(conc[i-1]) * p[i-1] - B(conc[i])) * C(conc[i+1]);
         q[i] = inv(A(conc[i-1]) * p[i-1] - B(conc[i])) * (phi(conc[i-1], conc[i], conc[i+1]) - A(conc[i-1]) * q[i-1]);
     }
 
     // A_last * u[L-2] + B_last * u[L-1] == phi_last
-    mat44 A_last = eye(4, 4) / 6 - 2 * tau * D / (h*h) - tau * jac(conc[L-2]) / 6;
+    mat44 A_last = eye(4, 4) / 6     - 2 * tau * D / (h*h) - tau * jac(conc[L-2]) / 6;
     mat44 B_last = eye(4, 4) * 5 / 6 + 2 * tau * D / (h*h) - tau * jac(conc[L-1]) * 5 / 6;
     vec4 phi_last = conc[L-2] / 6 + conc[L-1] * 5 / 6 + tau * (f(conc[L-2]) / 6 + f(conc[L-1]) * 5 / 6 - jac(conc[L-2]) * conc[L-2] / 6 - jac(conc[L-1]) * conc[L-1] * 5 / 6);
     new_conc[L-1] = inv(A_last * p[L-2] + B_last) * (phi_last - A_last * q[L-2]);
