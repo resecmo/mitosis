@@ -35,9 +35,9 @@ vec4 f0(vec4 u) {
 
 mat44 jac0(vec4 u) {
     return mat({{  -u[1]*kaf - kcat,             -u[0]*kaf,           kar,        kpcat},
-	        {  -u[1]*kaf + kcat, -u[0]*kaf - ppase*kpf, 2*kacat + kar,          kpr},
-	        {          u[1]*kaf,              u[0]*kaf,  -kacat - kar,            0},
-	        {                 0,             ppase*kpf,             0, -kpcat - kpr}});
+                {  -u[1]*kaf + kcat, -u[0]*kaf - ppase*kpf, 2*kacat + kar,          kpr},
+                {          u[1]*kaf,              u[0]*kaf,  -kacat - kar,            0},
+                {                 0,             ppase*kpf,             0, -kpcat - kpr}});
 }
 
 void initialize0(){
@@ -63,8 +63,45 @@ void initialize_test1(){
     }
 }
 
+//test2, no reactions, uniform initial concentration gradient
+vec4 f_test2(vec4 u) { 
+    return zeros<vec>(4);
+}
+
+mat44 jac_test2(vec4 u) {
+    return zeros<mat>(4, 4);
+}
+
+void initialize_test2(){
+    for (int i = 0; i < L; i++) {
+        conc[i] = ones<vec>(4) * i;
+    }
+}
+
+//test3, r, uniform initial concentration distribution
+vec4 f_test3(vec4 u) { 
+    return vec({-u[0],
+                u[0], 
+                0, 
+                0});
+}
+
+mat44 jac_test3(vec4 u) {
+    return mat({{-1, 0, 0, 0},
+                { 1, 0, 0, 0},
+                { 0, 0, 0, 0},
+                { 0, 0, 0, 0}});
+}
+
+void initialize_test3(){
+    for (int i = 0; i < L; i++) {
+        conc[i] = ones<vec>(4);
+    }
+}
+
+
 //arrays of test functions
-vec4(*(f_test[]))(vec4) = {f_test1};
-mat44(*(jac_test[]))(vec4) = {jac_test1};
-void(*(initialize_test[]))() = {initialize_test1};
+vec4(*(f_test[]))(vec4) = {f_test1, f_test2, f_test3};
+mat44(*(jac_test[]))(vec4) = {jac_test1, jac_test2, jac_test3};
+void(*(initialize_test[]))() = {initialize_test1, initialize_test2, initialize_test3};
 
