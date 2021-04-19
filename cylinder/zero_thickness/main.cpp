@@ -4,14 +4,9 @@
 
 using namespace arma;
 
-
-const double len = 1;
-const int L = 10; //number of nodes
-const double h = len / (L - 1);
-vec4 conc[L];
-
-const double tau = 0.01;
-
+vec4(*f)(vec4) = f0;
+mat44(*jac)(vec4) = jac0;
+void(*initialize)() = initialize0;
 
 mat44 A(vec4 u) {
     return eye(4, 4) / 12 - D * tau / (h*h) - tau / 12 * jac(u); 
@@ -31,12 +26,6 @@ vec4 phi(vec4 u_prev, vec4 u_cur, vec4 u_next) {
     vec4 jac_part = - tau * (jac(u_prev) * u_prev / 12 + jac(u_cur) * u_cur * 5 / 6 + jac(u_next) * u_next / 12);
     return u_part + f_part + jac_part;
 } 
-
-void initialize() {
-    for (int i = 0; i < L; i++) {
-        conc[i] = vec({1,1,1,1});
-    }
-}
 
 void step(){  
     vec4 new_conc[L];
@@ -67,7 +56,28 @@ void step(){
     std::copy(new_conc, new_conc+L, conc);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    
+    bool use_test = false;
+    char n_test = 0;
+    int c;
+    while ((c = getopt(argc, argv, "t:")) != -1) {
+        switch (c) {
+            case 't':
+                use_test = true;
+                n_test = atoi(optarg);
+                break;
+            case '?':
+                break;
+            default:
+                break;
+        }
+    }
+    if (use_test) {
+        f = f_test[n_test];
+        jac = jac_test[n_test]; 
+        initialize = initialize_test[n_test];
+    }
 
     initialize();
     step();    
