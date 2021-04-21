@@ -1,5 +1,4 @@
-#include "/home/osetr/Desktop/mitosis/cylinder/kode/const_diff_test/parameters.h"
-//didn't figure out how to make compiler use relative path to header
+#include "parameters.h"
 #include<armadillo>
 #include<iostream>
 #include<fstream>
@@ -89,13 +88,13 @@ bool r_in_mt(const int& i, const int& j){
 	return i < rmti && i > 0;
 }
 bool r_in_bulk(const int& i, const int& j){
-	return i > rmti && i <= I;
+	return i > rmti && i < I; //was <=
 }
 bool r_in_av(const int& i, const int& j){//is incorrect and not called
 	return i == rmti;
 }
 bool r_in_vanish(const int& i, const int& j){
-	return i==0 || i==I+1;
+	return i==0 || i==I; // was I+1
 }
 arma::sp_mat& diffr_coeff(const int& i, const int& j){
 	if (r_in_bulk(i,j)) {return dbulk_mx;}
@@ -104,14 +103,14 @@ arma::sp_mat& diffr_coeff(const int& i, const int& j){
 	return dav_mx;
 } // diffr_coeff(i,j) stands for d_i,j+0.5
 bool z_in_mt(const int& i, const int& j){
-	return i < rmti && j > 0 && j <= J;
+	return i < rmti && j > 0 && j < J; //was <=
 }
 bool z_in_bulk(const int& i, const int& j){
-	return i >= rmti && j > 0 && j <= J;
+	return i >= rmti && j > 0 && j < J; //was <=
 }
 bool z_in_av(const int& i, const int& j);
 bool z_in_vanish(const int& i, const int& j){
-	return j == 0 || j == J+1;
+	return j == 0 || j == J; // was J+1
 }
 arma::sp_mat& diffz_coeff(const int& i, const int& j){//??? 
 	if (z_in_bulk(i,j)) {return dbulk_mx;}
@@ -127,7 +126,7 @@ arma::sp_mat& diffz_coeff(const int& i, const int& j){//???
 	*/
 } // diffz_coeff(i,j) stands for d_i+0.5,j
 
-void initializeCAFGBJL(){
+void initializeCAFGEBJL(){
 	for (int i=0; i<I; ++i){
 		C_i[i] = (ht*(i + 1.) / (hr*hr*(i + 0.5))) * diffr_coeff(i+1,0);
 		A_i[i] = (ht*i / (hr*hr*(i+0.5))) * diffr_coeff(i,0);
@@ -160,26 +159,26 @@ arma::sp_mat F_ij(const int& i, const int& j){
 	/* question is what return type should be (to & or not to &)?
 	 * another question is who optimizes better -- me or compiler?
 	if (j < J-1){
-		if (i > 0) {
+		if (i > rmti) {
 			return F_i[1];
 		}
 		return F_i[2];
 	}
 	return F_i[0];
 	*/
-	return (j < J-1)*((i > rmti) ? F_i[1] : F_i[2]) + dzer_mx;
+	return (j < J-1)*((i >= rmti) ? F_i[1] : F_i[2]) + dzer_mx; //was i>
 }
 arma::sp_mat G_ij(const int& i, const int& j){
 	/* same questions here
 	if (j > 0){
-		if (i > 0){
+		if (i > rmti){
 			return G_i[1];
 		}
 		return G_i[2];
 	}
 	return G_i[0];
 	*/
-	return (j > 0)*((i > rmti) ? G_i[1] : G_i[2]) + dzer_mx;
+	return (j > 0)*((i >= rmti) ? G_i[1] : G_i[2]) + dzer_mx; //was i>
 }
 
 //TODO
@@ -189,8 +188,16 @@ void update(const int& i, const int& j,
 		double& shift, double& worstshift,
 		const arma::vec::fixed<6> dt_phi[I][J]){ //arrays are passed by reference by default, I think
 	uij_prev=u_ij[i+1][j+1];
-	u_ij[i+1][j+1]=Binv_ij[i][j]
-		   * (dt_phi[i][j] 
+	//u_ij[i+1][j+1] = Binv_ij[i][j]
+		   //* (dt_phi[i][j]
+		      //- altomg*BJL_ij[i][j]*u_ij[i+1][j+1] //sign?
+		      //+ C_ij(i,j)*u_ij[i+2][j+1]
+		      //+ A_ij(i,j)*u_ij[i][j+1]
+		      //+ F_ij(i,j)*u_ij[i+1][j+2]
+		      //+ G_ij(i,j)*u_ij[i+1][j]);
+	u_ij[i+1][j+1] = (1 - omega)*u_ij[i+1][j+1] 
+		+ omega*Binv_ij[i][j]
+		   * (dt_phi[i][j]
 		      + C_ij(i,j)*u_ij[i+2][j+1]
 		      + A_ij(i,j)*u_ij[i][j+1]
 		      + F_ij(i,j)*u_ij[i+1][j+2]
@@ -243,10 +250,11 @@ void impEuler(){
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
 			const arma::vec::fixed<6> uij = u_ij[i+1][j+1];
-			BJF_ij[i][j] = - ourJac(uij); //mind the sign
+			BJF_ij[i][j] = - ht*ourJac(uij); //mind the sign
+			//B_ij[i][j] = invomg*BJL_ij[i][j] + BJF_ij[i][j];//omega or invomg???
 			B_ij[i][j] = BJL_ij[i][j] + BJF_ij[i][j];
 			Binv_ij[i][j] = B_ij[i][j].i();
-			dt_phi[i][j] = ht*(rhs(uij) + (BJF_ij[i][j]*uij)) + uij; //SIGN!!!
+			dt_phi[i][j] = ht*rhs(uij) + BJF_ij[i][j]*uij + uij; //SIGN!!!
 			//u_ij[i+1][j+1] = uij; // I forgot what I meant
 		}
 	}
@@ -257,12 +265,13 @@ void impEuler(){
 		u11 = u_ij[1][1]; //toRemove
 		_u11 = u11[1];
 	} while (!satisfied);
-	satisfied=false;
+	//satisfied=false;
 	max_newton_steps = (newton_steps > max_newton_steps)?newton_steps:max_newton_steps;
+	//std::cout << "newton_steps: " << newton_steps << std::endl;
 }
 //TODO
 //don't forget B_ij and Binv_ij stepwise initialization
-void stamp(std::ofstream& csv_stream){
+void stamp(std::ostream& csv_stream){ //was ofstream)))
 	for (int j=1; j <= J; ++j){
 		for (int i=1; i<I; ++i){
 			csv_stream << u_ij[i][j][1] << ",";
@@ -270,7 +279,7 @@ void stamp(std::ofstream& csv_stream){
 		csv_stream << u_ij[I][j][1] << std::endl;
 	}
 }
-void timeStep(std::ofstream& csv_stream){ // i wonder if ofstream should better be reopened at each call
+void timeStep(std::ostream& csv_stream){ // i wonder if ofstream should better be reopened at each call
 	stamp(csv_stream);
 	impEuler();
 }
@@ -291,15 +300,23 @@ void saveinfo(const std::string& save_path, int argc, char* argv[]){
 	} else {std::cout << "Can't save " << save_path << ".info" << std::endl;}
 }
 
+class NullBuffer : public std::streambuf{
+	public:
+		int overflow(int c) {return c;}
+}; //stackoverflow)))
 int main(int argc, char* argv[]){
-	/* `-ic init_cond.csv` for initial condition
-	 * `-t time` for time of simulation
-	 * `-o save_path` for main output file
-	     -o option creates save_path.csv and save_path.info
-	     w/ u_ijs and other information respectively
-	 */
-	std::string init_cond_path;
+	std::string help_msg = std::string("`-ic init_cond.csv` for initial condition\n")
+				+std::string("`-t time` for time of simulation\n")
+				+std::string("`-o save_path` for main output file\n")
+				+std::string("-o option creates save_path.csv and save_path.info\n")
+				+std::string("w/ u_ijs and other information respectively")
+				+std::string("\n`-omg omega` for omega\n")
+				+std::string("`-eps relax_crit` for nepsilon\n")
+				+std::string("`-ht ht` for ht\n");
+	 
+	std::string init_cond_path="cylinder_ic.scv";
 	double time=10;
+	int each = 1;
 	std::string save_path="out";
 	std::string comment="none";
 	for (int i=1; i<argc; ++i){
@@ -316,10 +333,26 @@ int main(int argc, char* argv[]){
 		if (strarg=="-m"){ //m for message
 			comment=argv[i+1];
 		}
+		if (strarg=="-e"){
+			each=std::stod(argv[i+1]);
+		}
+		if (strarg=="-omg"){
+			omega=std::stod(argv[i+1]);
+		}
+		if (strarg=="-ht"){
+			ht=std::stod(argv[i+1]);
+		}
+		if (strarg=="-eps"){
+			nepsilon=std::stod(argv[i+1]);
+		}
+		if (strarg=="-h"){
+			std::cout << help_msg;
+			return 0;
+		}
 	}
-	int timesteps = time/ht;
+	unsigned long long timesteps = time/ht;
 	initializeDiffusion();
-	initializeCAFGBJL();
+	initializeCAFGEBJL();
 	set_init_cond_from_file(init_cond_path);
 	// larmadillo usage
 	/*
@@ -334,11 +367,18 @@ int main(int argc, char* argv[]){
 	*/
 	//actual execution finally starts
 	std::ofstream csv_stream(save_path + ".csv");
+	NullBuffer nullBuf;
+	std::ostream nullStr(&nullBuf); //stackoverflow)))
 	if (csv_stream.is_open()){
-		for (int t=0; t<timesteps; ++t){
-			timeStep(csv_stream);
+		unsigned long long t=0;
+		for (t=0; t<timesteps; ++t){
+			if (t % each == 0)
+				timeStep(csv_stream);
+			else
+				timeStep(nullStr); //stackoverflow)))
 		}
-		stamp(csv_stream);
+		if (t % each == 0)
+			stamp(csv_stream);
 		csv_stream.close();
 	} else {std::cout << "Can't save " << save_path << ".csv" << std::endl;}
 	saveinfo(save_path, argc, argv);

@@ -1,6 +1,6 @@
 #include <armadillo>
 
-const double nepsilon=0.001; //epsilon for newton iterations
+static double nepsilon=1e-05; //epsilon for newton iterations
 const int I=100;
 const int J=100;
 const double R=1;
@@ -8,14 +8,18 @@ const double Z=1;
 const double RMT=0;
 const double hr=R/I;
 const double hz=Z/J;
-const double ht=0.01;
-const int rmti=I*RMT/R; //might require +-1 correction
+static double ht=1e-02;
+const int rmti=I*(RMT/R); //might require +-1 correction
+static double omega = 1;
+const double invomg = 1/omega;
+//const double altomg = 1 - invomg;
+const double altomg = omega - 1;
 
 const double kaf=1;
 const double kar=1;
 const double kac=1;
 const double km=1;
-const double kpf=1;
+const double kpf=0.5;
 const double kpr=1;
 const double kpc=1;
 const double knf=1;
@@ -43,18 +47,18 @@ const double j33_ = - (kar + kac);
 const double j56_ = kneg + knegst;
 const double j66_ = - (2*kneg + kpos);
 //jacobian
-arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
-	arma::mat res = {
-		{0,0,0,0,0,0},
-		{0,0,0,0,0,0},
-		{0,0,0,0,0,0},
-		{0,0,0,0,0,0},
-		{0,0,0,0,0,0},
-		{0,0,0,0,0,0}
-	};
-	return res;
-}
-/*
+//arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
+	//arma::mat res = {
+		//{0,0,0,0,0,0},
+		//{0,0,0,0,0,0},
+		//{0,0,0,0,0,0},
+		//{0,0,0,0,0,0},
+		//{0,0,0,0,0,0},
+		//{0,0,0,0,0,0}
+	//};
+	//return res;
+//}
+
 arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
 	const double knfan456 = knfn0 - knfal0*(u[3] + u[4] + u[5]);
 	const double knfau1 = knfal0*u[0];
@@ -71,13 +75,13 @@ arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
 	};
 	return res;
 }
-*/
+
 //right hand side (chemical reactions)
-arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u){
-	arma::vec::fixed<6> res = {0,0,0,0,0,0};
-	return res;
-}
-/*
+//arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u){
+	//arma::vec::fixed<6> res = {0,0,0,0,0,0};
+	//return res;
+//}
+
 arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u){
 	const double kafu12=kaf*u[0]*u[1];
 	const double knfan456 = knfn0 - knfal0*(u[3] + u[4] + u[5]);
@@ -91,4 +95,4 @@ arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u){
 	};
 	return res;
 }
-*/
+

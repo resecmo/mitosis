@@ -1,4 +1,5 @@
-#include "/home/osetr/Desktop/mitosis/cylinder/kode/const_diff_test/parameters.h"
+//#include "/home/osetr/Desktop/mitosis/cylinder/kode/const_diff_test/parameters.h"
+#include "parameters.h"
 //didn't figure out how to make compiler use relative path to header
 #include<armadillo>
 #include<iostream>
@@ -89,13 +90,13 @@ bool r_in_mt(const int& i, const int& j){
 	return i < rmti && i > 0;
 }
 bool r_in_bulk(const int& i, const int& j){
-	return i > rmti && i <= I;
+	return i > rmti && i < I; //was <=
 }
 bool r_in_av(const int& i, const int& j){//is incorrect and not called
 	return i == rmti;
 }
 bool r_in_vanish(const int& i, const int& j){
-	return i==0 || i==I+1;
+	return i==0 || i==I; // was I+1
 }
 arma::sp_mat& diffr_coeff(const int& i, const int& j){
 	if (r_in_bulk(i,j)) {return dbulk_mx;}
@@ -104,14 +105,14 @@ arma::sp_mat& diffr_coeff(const int& i, const int& j){
 	return dav_mx;
 } // diffr_coeff(i,j) stands for d_i,j+0.5
 bool z_in_mt(const int& i, const int& j){
-	return i < rmti && j > 0 && j <= J;
+	return i < rmti && j > 0 && j < J; //was <=
 }
 bool z_in_bulk(const int& i, const int& j){
-	return i >= rmti && j > 0 && j <= J;
+	return i >= rmti && j > 0 && j < J; //was <=
 }
 bool z_in_av(const int& i, const int& j);
 bool z_in_vanish(const int& i, const int& j){
-	return j == 0 || j == J+1;
+	return j == 0 || j == J; //was J+1
 }
 arma::sp_mat& diffz_coeff(const int& i, const int& j){//??? 
 	if (z_in_bulk(i,j)) {return dbulk_mx;}
@@ -127,7 +128,7 @@ arma::sp_mat& diffz_coeff(const int& i, const int& j){//???
 	*/
 } // diffz_coeff(i,j) stands for d_i+0.5,j
 
-void initializeCAFGBJL(){
+void initializeCAFGEBJL(){
 	for (int i=0; i<I; ++i){
 		C_i[i] = (ht*(i + 1.) / (hr*hr*(i + 0.5))) * diffr_coeff(i+1,0);
 		A_i[i] = (ht*i / (hr*hr*(i+0.5))) * diffr_coeff(i,0);
@@ -141,10 +142,14 @@ void initializeCAFGBJL(){
 	for (int i=0; i<6; ++i){
 		E_mx(i,i)=1;
 	}
+	double pseudoG;
+	arma::mat pG;
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
 			BJL_ij[i][j] = E_mx + (ht / (hr*hr*(i+0.5))) * ((i + 1.)*diffr_coeff(i+1,j) + i*diffr_coeff(i,j))
 				       + (ht / (hz*hz)) * (diffz_coeff(i,j+1) + diffz_coeff(i,j));
+			pG = (ht/(hz*hz) * diffz_coeff(i,j));
+			pseudoG = pG(1,1);
 		}
 	}
 
@@ -167,7 +172,7 @@ arma::sp_mat F_ij(const int& i, const int& j){
 	}
 	return F_i[0];
 	*/
-	return (j < J-1)*((i > rmti) ? F_i[1] : F_i[2]) + dzer_mx;
+	return (j < J-1)*((i >= rmti) ? F_i[1] : F_i[2]) + dzer_mx; //was i>
 }
 arma::sp_mat G_ij(const int& i, const int& j){
 	/* same questions here
@@ -179,7 +184,7 @@ arma::sp_mat G_ij(const int& i, const int& j){
 	}
 	return G_i[0];
 	*/
-	return (j > 0)*((i > rmti) ? G_i[1] : G_i[2]) + dzer_mx;
+	return (j > 0)*((i >= rmti) ? G_i[1] : G_i[2]) + dzer_mx; //was i>
 }
 
 //TODO
@@ -293,7 +298,7 @@ void saveinfo(const std::string& save_path, int argc, char* argv[]){
 
 int main(int argc, char* argv[]){
 	initializeDiffusion();
-	initializeCAFGBJL();
+	initializeCAFGEBJL();
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
 			u_ij[i+1][j+1][1] = arma::norm(BJL_ij[i][j] - A_ij(i,j) - C_ij(i,j) - F_ij(i,j) - G_ij(i,j), "fro");
@@ -301,5 +306,41 @@ int main(int argc, char* argv[]){
 	}
 	std::ofstream uniformity("uniformity.csv");
 	stamp(uniformity);
+	std::cout << "diffr_coeff(0,10) = " << diffr_coeff(0,10)(0,0) << std::endl;
+	std::cout << "A_ij[0][10] = " << A_ij(0,10)(0,0) << std::endl;
+	std::cout << "diffr_coeff(100,10) = " << diffr_coeff(100,10)(0,0) << std::endl;
+	std::cout << "C_ij[99][10] = " << C_ij(99,10)(0,0) << std::endl;
+	//std::cout << "diffz_coeff(10,0) = " << diffz_coeff(10,0)(0,0) << std::endl;
+	//std::cout << "G_ij(10, 0) = " << G_ij(10,0)(0,0) << std::endl;
+	//std::cout << "diffz_coeff(10,100) = " << diffz_coeff(10,100)(0,0) << std::endl;
+	//std::cout << "F_ij(10, 99) = " << F_ij(10,99) << std::endl;
+	//std::cout << "G_ij(10, 99) = " << G_ij(10,99) << std::endl;
+	//std::cout << "A_ij(10, 99) = " << A_ij(10,99) << std::endl;
+	//std::cout << "C_ij(10, 99) = " << C_ij(10,99) << std::endl;
+	//std::cout << "BJL_ij[10,99] = " << BJL_ij[10][99] << std::endl;
+	//std::cout << u_ij[11][100][1] << std::endl;
+	//std::cout << "E_mx = " << E_mx << std::endl;
+	//std::cout << "F_ij(10, 98) = " << F_ij(10,98) << std::endl;
+	//std::cout << "G_ij(10, 98) = " << G_ij(10,98) << std::endl;
+	//std::cout << "A_ij(10, 98) = " << A_ij(10,98) << std::endl;
+	//std::cout << "C_ij(10, 98) = " << C_ij(10,98) << std::endl;
+	//std::cout << "BJL_ij[10,98] = " << BJL_ij[10][98] << std::endl;
+	//std::cout << u_ij[11][99][1] << std::endl;
+	//std::cout << u_ij[11][101][1] << std::endl;
+	//std::cout <<"diff(10,99)" << BJL_ij[10][99] - A_ij(10,99) - C_ij(10,99) - F_ij(10,99) - G_ij(10,99);
+	std::cout <<"diff(99,10)" << BJL_ij[99][10] - A_ij(99,10) - C_ij(99,10) - F_ij(99,10) - G_ij(99,10);
+	//std::cout <<"diff(10,0)" << BJL_ij[10][0] - A_ij(10,0) - C_ij(10,0) - F_ij(10,0) - G_ij(10,0);
+	std::cout <<"diff(0,10)" << BJL_ij[0][10] - A_ij(0,10) - C_ij(0,10) - F_ij(0,10) - G_ij(0,10);
+	std::cout << "F_ij(0,10) = " << F_ij(0,10) << std::endl;
+	std::cout << "G_ij(0,10) = " << G_ij(0,10) << std::endl;
+	std::cout << "A_ij(0,10) = " << A_ij(0,10) << std::endl;
+	std::cout << "C_ij(0,10) = " << C_ij(0,10) << std::endl;
+	std::cout << "BJL_ij[0][10] = " << BJL_ij[0][10] << std::endl;
+	std::cout <<"diff(0,0)" << BJL_ij[0][0] - A_ij(0,0) - C_ij(0,0) - F_ij(0,0) - G_ij(0,0);
+	std::cout << "F_ij(0,0) = " << F_ij(0,0) << std::endl;
+	std::cout << "G_ij(0,0) = " << G_ij(0,0) << std::endl;
+	std::cout << "A_ij(0,0) = " << A_ij(0,0) << std::endl;
+	std::cout << "C_ij(0,0) = " << C_ij(0,0) << std::endl;
+	std::cout << "BJL_ij[0][0] = " << BJL_ij[0][0] << std::endl;
 	return 0;
 }
