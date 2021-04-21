@@ -7,6 +7,7 @@ using namespace arma;
 vec4(*f)(vec4) = f0;
 mat44(*jac)(vec4) = jac0;
 void(*initialize)() = initialize0;
+mat44& D = D0;
 
 mat44 A(vec4 u) {
     return eye(4, 4) / 12 - D * tau / (h*h) - tau / 12 * jac(u); 
@@ -58,15 +59,25 @@ void step(){
 
 int main(int argc, char *argv[]) {
     
+    //std::ostream &out = std::cout;
+    std::ofstream out("./output.txt");
+
+
     bool use_test = false;
     char n_test = 0;
+    bool write;
+    int n_steps = 1;
     int c;
-    while ((c = getopt(argc, argv, "t:")) != -1) {
+    while ((c = getopt(argc, argv, "t:o:s:")) != -1) {
         switch (c) {
             case 't':
                 use_test = true;
                 n_test = atoi(optarg);
                 break;
+            case 'o':
+                break;
+            case 's':
+                n_steps = atoi(optarg);
             case '?':
                 break;
             default:
@@ -77,14 +88,30 @@ int main(int argc, char *argv[]) {
         f = f_test[n_test];
         jac = jac_test[n_test]; 
         initialize = initialize_test[n_test];
+        D = *D_test[n_test];
     }
 
     initialize();
-    step();    
     
+    out << n_steps + 1 << " " << L << std::endl; 
     for (auto &v : conc) {
-        std::cout << v << std::endl;
+        for (int i = 0; i < 3; i++) {
+            out << v[i] << ",";
+        }
+        out << v[3] << std::endl;
+    }
+    for (int i = 0; i < n_steps; i++) {
+        step();
+        for (auto &v : conc) {
+            for (int i = 0; i < 3; i++) {
+                out << v[i] << ",";
+            }
+            out << v[3] << std::endl;
+        }
     }
 
+
+    
+    
     return 0;
 }
