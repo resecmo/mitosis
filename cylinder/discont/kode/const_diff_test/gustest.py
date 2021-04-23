@@ -11,6 +11,8 @@ def sol(z, t):
         return res if res > 1e-200 else 0
     else:
         return (z == 0) * 2 / hz
+def gus(x,y,mux=0,muy=50,sg=10): #x=R, y=Z
+    return math.exp(-0.5 * ((x-mux)**2 + (y-muy)**2) / sg**2) / (sg * math.sqrt(2 * math.pi))
 
 const_diff_ic = open("pres/chuni/chconst_diff_ic.scv", "w+")
 t0=0*ht

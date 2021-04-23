@@ -250,11 +250,11 @@ void impEuler(){
 	for (int i=0; i<I; ++i){
 		for (int j=0; j<J; ++j){
 			const arma::vec::fixed<6> uij = u_ij[i+1][j+1];
-			BJF_ij[i][j] = - ht*ourJac(uij); //mind the sign
+			BJF_ij[i][j] = - ht*ourJac(uij,i,j); //mind the sign
 			//B_ij[i][j] = invomg*BJL_ij[i][j] + BJF_ij[i][j];//omega or invomg???
 			B_ij[i][j] = BJL_ij[i][j] + BJF_ij[i][j];
 			Binv_ij[i][j] = B_ij[i][j].i();
-			dt_phi[i][j] = ht*rhs(uij) + BJF_ij[i][j]*uij + uij; //SIGN!!!
+			dt_phi[i][j] = ht*rhs(uij,i,j) + BJF_ij[i][j]*uij + uij; //SIGN!!!
 			//u_ij[i+1][j+1] = uij; // I forgot what I meant
 		}
 	}

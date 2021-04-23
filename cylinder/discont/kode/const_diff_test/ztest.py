@@ -12,8 +12,9 @@ def sol(z, t):
     else:
         return (z == 0) * 2 / hz
 
-const_diff_ic = open("zconst_diff_ic.scv", "w+")
-t0=1*ht
+folder = "pres/zdiff0/"
+const_diff_ic = open(folder + "zconst_diff_ic.scv", "w+")
+t0=10*ht
 uss='\n'.join([';'.join(
                   [','.join(
                             map(str, [sol(j*hz, t0)] * 6)
@@ -24,7 +25,7 @@ const_diff_ic.close()
 #print(bessel(1, zm))
 each = 1
 time = 0.1
-const_diff_ex = open("zconst_diff_ex.csv", "w+")
+const_diff_ex = open(folder + "zconst_diff_ex.csv", "w+")
 n_rows = int(time/ht/each+1)
 print("n_rows = %d\n" %n_rows)
 times = [t0 + i*ht*each for i in range(0,n_rows)]
