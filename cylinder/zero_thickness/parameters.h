@@ -2,12 +2,12 @@
 
 using namespace arma;
 
-const double len = 1;
-const int L = 100; //number of nodes
+const double len = 20;
+const int L = 400; //number of nodes
 const double h = len / (L - 1);
 vec4 conc[L];
 
-const double tau = 0.01;
+const double tau = 0.1;
 
 //diffusion constants and matrix
 const double diff_A = 1;
@@ -110,9 +110,9 @@ const mat44 D_test3 = diagmat(vec({0.001, 0, 0, 0}));
 
 //test4, FitzHugh-Nagumo
 const double fhn_i = 0.0;
-const double fhn_a = 1.0;
-const double fhn_b = 1.0;
-const double fhn_phi = 1.0;
+const double fhn_a = -0.7;
+const double fhn_b = 0.8;
+const double fhn_phi = 0.04;
 vec4 f_test4(vec4 u) { 
     return vec({u[0] - u[0]*u[0]*u[0] / 3 - u[1] + fhn_i,
                 fhn_phi * (u[0] - fhn_a - fhn_b * u[1]), 
@@ -128,12 +128,15 @@ mat44 jac_test4(vec4 u) {
 }
 
 void initialize_test4(){
-    for (int i = 0; i < L; i++) {
-        conc[i] = ones<vec>(4);
+    for (int i = 0; i < 10; i++) {
+        conc[i] = vec({1.5, 0.6, 0, 0});
+    }
+    for (int i = 10; i < L; i++) {
+        conc[i] = vec({-1.1994, -0.6243, 0, 0});
     }
 }
 
-const mat44 D_test4 = diagmat(vec({1, 0, 0, 0}));
+const mat44 D_test4 = diagmat(vec({0.001, 0, 0, 0}));
 
 //arrays of test functions
 vec4(*(f_test[]))(vec4) = {f_test1, f_test2, f_test3, f_test4};
