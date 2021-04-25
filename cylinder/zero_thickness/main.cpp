@@ -1,5 +1,6 @@
 #include "parameters.h"
 #include <iostream>
+#include <getopt.h>
 #include <armadillo>
 
 using namespace arma;
@@ -62,51 +63,83 @@ int main(int argc, char *argv[]) {
     //std::ostream &out = std::cout;
     std::ofstream out("./output.txt");
 
-
-    bool use_test = false;
-    char n_test = 0;
+    
+    char n_test = -1;
+    static struct option long_options[] = {
+        {"help", no_argument, 0, 'h'},
+        {"test", required_argument, 0, 'T'},
+        {"time-steps", required_argument, 0, 't'},
+        {"space-steps", required_argument, 0, 's'},
+        {"length", required_argument, 0, 'l'},
+        {"total-time", required_argument, 0, 'm'}
+    };
     bool write;
-    int n_steps = 1;
+    int n_timesteps = 1;
+    double total_time;
     int c;
-    while ((c = getopt(argc, argv, "t:o:s:")) != -1) {
+    int option_index = 0;
+    while ((c = getopt_long(argc, argv, "T:o:", long_options, &option_index)) != -1) {
         switch (c) {
-            case 't':
-                use_test = true;
+            case 'h':
+                printf("--help\t\tView this help\n"
+                       "--test n\tUse test #n\n"
+                       "--time-steps u\tSet number of time steps\n"
+                       "--space-steps u\tSet number of nodes\n"
+                       "--length f\tSet MT length\n"
+                       "--total-time f\tSet total time of simulation\n");
+                abort();
+                break;
+            case 'T':
                 n_test = atoi(optarg);
                 break;
             case 'o':
                 break;
+            case 't':
+                n_timesteps = atoi(optarg);
+                tau = total_time / n_timesteps;
+                break;
             case 's':
-                n_steps = atoi(optarg);
+                L = atoi(optarg);
+                h = len / (L + 1);
+                break;
+            case 'l':
+                len = atof(optarg);
+                h = len / (L + 1);
+                break;
+            case 'm':
+                total_time = atof(optarg);
+                tau = total_time / n_timesteps;
+                break;
             case '?':
                 break;
             default:
                 break;
         }
     }
-    if (use_test) {
+    if (n_test != -1) {
         f = f_test[n_test];
         jac = jac_test[n_test]; 
         initialize = initialize_test[n_test];
         D = *D_test[n_test];
     }
-
+    
+    conc = new vec4[L];
     initialize();
     
-    out << n_steps + 1 << " " << L << std::endl; 
-    for (auto &v : conc) {
-        for (int i = 0; i < 3; i++) {
-            out << v[i] << ",";
+    out << n_timesteps + 1 << " " << L << std::endl; 
+    for (size_t i = 0; i < L; i++) {
+        for (int j = 0; j < 3; j++) {
+            out << conc[i][j] << ",";
         }
-        out << v[3] << std::endl;
+        out << conc[i][3] << std::endl;
     }
-    for (int i = 0; i < n_steps; i++) {
+    for (int i = 0; i < n_timesteps; i++) {
         step();
-        for (auto &v : conc) {
-            for (int i = 0; i < 3; i++) {
-                out << v[i] << ",";
+        for (size_t j = 0; j < L; j++) {
+            for (int k = 0; k < 3; k++) {
+                out << conc[j][k] << ",";
             }
-            out << v[3] << std::endl;
+            out << conc[j][3] << std::endl;
         }
     }
 

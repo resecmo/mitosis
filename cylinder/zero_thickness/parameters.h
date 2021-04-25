@@ -2,12 +2,12 @@
 
 using namespace arma;
 
-const double len = 20;
-const int L = 400; //number of nodes
-const double h = len / (L - 1);
-vec4 conc[L];
+double len = 20;
+int L = 400; //number of nodes
+double h = len / (L - 1);
+vec4* conc = 0;
 
-const double tau = 0.1;
+double tau = 0.1;
 
 //diffusion constants and matrix
 const double diff_A = 1;
@@ -128,10 +128,11 @@ mat44 jac_test4(vec4 u) {
 }
 
 void initialize_test4(){
-    for (int i = 0; i < 10; i++) {
+    int initial_length = (int)(0.1 / h) + 1;  // length of spike in initial conditions
+    for (int i = 0; i < initial_length; i++) {
         conc[i] = vec({1.5, 0.6, 0, 0});
     }
-    for (int i = 10; i < L; i++) {
+    for (int i = initial_length; i < L; i++) {
         conc[i] = vec({-1.1994, -0.6243, 0, 0});
     }
 }
