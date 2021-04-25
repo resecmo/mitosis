@@ -13,6 +13,8 @@ for i=0:(xize-1)
 j=100*i
 z = a(j+1:j+100, :);
 zz = aa(i+1, :);
+abser = abs(z(:,1)-zz');
+err = min(abser, abser./abs(zz'));
 #z = a(201:300,1:100)*100;
 #z = z - m;
 #z = z / M;
@@ -20,6 +22,7 @@ zz = aa(i+1, :);
 figure(i+1);
 colormap(cmap);
 caxis([m M]);
+subplot(1,2,1);
 plot(x, z(:,1)
 #  , "linestyle", "none", "marker", "x"
   , x, zz
@@ -31,6 +34,14 @@ xlabel('z', 'fontsize', 15);
 ylabel('[a*]', 'fontsize', 15);
 title(sprintf('%d^{th} timestep', i), 'fontsize', 15);
 legend(["numerical";"exact"] ,"fontsize",15);
+subplot(1,2,2);
+  plot(x,err * 100);
+  ylim([0, 0.2] * 100);
+  grid on;
+  xlabel('z', 'fontsize', 15);
+  ylabel('min(\delta, \epsilon)', 'fontsize', 15);
+  title('err, %', 'fontsize', 15);
+saveas(sprintf("z%d.png", i));
 ##clf;
 ##image(z);
 ##colorbar

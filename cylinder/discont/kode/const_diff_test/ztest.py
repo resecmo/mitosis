@@ -14,7 +14,7 @@ def sol(z, t):
 
 folder = "pres/zdiff0/"
 const_diff_ic = open(folder + "zconst_diff_ic.scv", "w+")
-t0=10*ht
+t0=0*ht
 uss='\n'.join([';'.join(
                   [','.join(
                             map(str, [sol(j*hz, t0)] * 6)

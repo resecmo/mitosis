@@ -2,8 +2,8 @@
 #include <cmath>
 
 static double nepsilon=1e-05; //epsilon for newton iterations
-const int I=100;
-const int J=100;
+const int I=50;
+const int J=50;
 const double R=1;
 const double Z=1;
 const double RMT=0;
@@ -31,9 +31,9 @@ const double knegst=0.001;//???
 
 const double alpha=1;
 //const double n0=1;
-double fgus(const int& i, const int& j, const double& sg=10, const double& mur=0, const double& muz=50){
-	//return std::exp(-0.5 * (std::pow(mur - i, 2) + std::pow(muz - j, 2)) / std::pow(sg, 2));
-	return 1;
+double fgus(const int& i, const int& j, const double& sg=5, const double& mur=0, const double& muz=25){
+	return 1000 * std::exp(-0.5 * (std::pow(mur - i, 2) + std::pow(muz - j, 2)) / std::pow(sg, 2));
+	//return 1;
 }
 double n0(const int& i, const int& j){
 	return fgus(i,j);
@@ -61,7 +61,7 @@ const double j33_ = - (kar + kac);
 const double j56_ = kneg + knegst;
 const double j66_ = - (2*kneg + kpos);
 //jacobian
-//arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u){
+//arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u, const int& i, const int& j){
 	//arma::mat res = {
 		//{0,0,0,0,0,0},
 		//{0,0,0,0,0,0},
@@ -95,7 +95,7 @@ arma::mat::fixed<6,6> ourJac(const arma::vec::fixed<6>& u, const int& i, const i
 }
 
 //right hand side (chemical reactions)
-//arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u){
+//arma::vec::fixed<6> rhs(const arma::vec::fixed<6>& u, const int& i, const int& j){
 	//arma::vec::fixed<6> res = {0,0,0,0,0,0};
 	//return res;
 //}

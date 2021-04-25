@@ -312,7 +312,8 @@ int main(int argc, char* argv[]){
 				+std::string("w/ u_ijs and other information respectively")
 				+std::string("\n`-omg omega` for omega\n")
 				+std::string("`-eps relax_crit` for nepsilon\n")
-				+std::string("`-ht ht` for ht\n");
+				+std::string("`-ht ht` for ht\n")
+				+std::string("`-e each` for each\n");
 	 
 	std::string init_cond_path="cylinder_ic.scv";
 	double time=10;

@@ -42,6 +42,7 @@ colorbar
 xlabel("R", "fontsize", 15);
 ylabel("Z", "fontsize", 15);
 title(num2str(i));
+saveas(sprintf("ch%d.png",i));
 ##filename = sprintf("con%d.png",i);
 ##print(i+1,filename);
 endfor

@@ -1,6 +1,6 @@
 import math
-I=100
-J=100
+I=50
+J=50
 hz=0.01
 ht=0.01
 d=0.1
@@ -14,11 +14,11 @@ def sol(z, t):
 def gus(x,y,mux=0,muy=50,sg=10): #x=R, y=Z
     return math.exp(-0.5 * ((x-mux)**2 + (y-muy)**2) / sg**2) / (sg * math.sqrt(2 * math.pi))
 
-const_diff_ic = open("pres/chuni/chconst_diff_ic.scv", "w+")
+const_diff_ic = open("pres/chgaus/chconst_diff_ic.scv", "w+")
 t0=0*ht
 uss='\n'.join([';'.join(
                   [','.join(
-                            ["1"] * 6
+                            ["1"] + ["0"] + ["0"] + ["0"]*3
                                     ) for i in range(I)]
                                                         ) for j in range(J)])
 const_diff_ic.write(uss)

@@ -16,7 +16,7 @@ const_diff_ic = open("pres/chuni/chconst_diff_ic.scv", "w+")
 t0=0*ht
 uss='\n'.join([';'.join(
                   [','.join(
-                            ["1"] * 6
+                            ["0.1"] * 6
                                     ) for i in range(I)]
                                                         ) for j in range(J)])
 const_diff_ic.write(uss)
