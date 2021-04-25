@@ -125,7 +125,8 @@ int main(int argc, char *argv[]) {
     
     conc = new vec4[L];
     initialize();
-    
+   
+    out << total_time << " " << len << std::endl;
     out << n_timesteps + 1 << " " << L << std::endl; 
     for (size_t i = 0; i < L; i++) {
         for (int j = 0; j < 3; j++) {
