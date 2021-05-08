@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/zero_thickness.dir/main.cpp.o  -o zero_thickness  /usr/lib/libarmadillo.so 

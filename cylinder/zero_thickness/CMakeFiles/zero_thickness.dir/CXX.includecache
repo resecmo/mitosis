@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/mitosis/cylinder/zero_thickness/main.cpp
+parameters.h
+/home/mitosis/cylinder/zero_thickness/parameters.h
+iostream
+-
+getopt.h
+-
+armadillo
+-
+
+/home/mitosis/cylinder/zero_thickness/parameters.h
+armadillo
+-
+

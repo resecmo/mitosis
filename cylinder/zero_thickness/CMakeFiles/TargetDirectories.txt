@@ -1,0 +1,3 @@
+/home/mitosis/cylinder/zero_thickness/CMakeFiles/rebuild_cache.dir
+/home/mitosis/cylinder/zero_thickness/CMakeFiles/edit_cache.dir
+/home/mitosis/cylinder/zero_thickness/CMakeFiles/zero_thickness.dir
