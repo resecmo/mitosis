@@ -3,7 +3,7 @@ import numpy as np
 
 
 with open("output.txt", "r") as f:
-    total_time, total_len = tuple(map(int, f.readline().split()))
+    total_time, total_len = tuple(map(float, f.readline().split()))
     steps, l = tuple(map(int, f.readline().split()))
     conc = np.empty(shape=(steps, l, 4))
     for i in range(steps):
