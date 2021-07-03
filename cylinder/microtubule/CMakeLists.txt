@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name
-project(zero_thickness)
+project(microtubule)
 
 find_package(Armadillo REQUIRED)
 

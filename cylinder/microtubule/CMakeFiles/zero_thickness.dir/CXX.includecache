@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/mitosis/cylinder/zero_thickness/main.cpp
+/home/mitosis/cylinder/microtubule/main.cpp
 parameters.h
-/home/mitosis/cylinder/zero_thickness/parameters.h
+/home/mitosis/cylinder/microtubule/parameters.h
 iostream
 -
 getopt.h
@@ -16,7 +16,7 @@ getopt.h
 armadillo
 -
 
-/home/mitosis/cylinder/zero_thickness/parameters.h
+/home/mitosis/cylinder/microtubule/parameters.h
 armadillo
 -
 
