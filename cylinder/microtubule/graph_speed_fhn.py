@@ -15,12 +15,12 @@ with open("output.txt", "r") as f:
 for component in range(2):
     h = conc[:, :, component]
 
-    t1 = 400
+    t1 = steps // 3
     x1 = t1 / steps * total_time
     max1 = np.argmax(h[t1, :])
     y1 = max1 / l * total_len
 
-    t2 = 1490
+    t2 = steps - 10
     x2 = t2 / steps * total_time
     max2 = np.argmax(h[t2, :])
     y2 = max2 / l * total_len
