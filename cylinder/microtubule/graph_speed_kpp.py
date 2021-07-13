@@ -20,7 +20,7 @@ for component in range(1):
     max1 = np.argmin(abs(h[t1, :] - 0.5))
     y1 = max1 / l * total_len
 
-    t2 = 1490
+    t2 = steps - 10
     x2 = t2 / steps * total_time
     max2 = np.argmin(abs(h[t2, :] - 0.5))
     y2 = max2 / l * total_len
