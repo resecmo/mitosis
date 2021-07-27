@@ -10,40 +10,48 @@ vec4* conc = 0;
 double tau = 0.1;
 
 //diffusion constants and matrix
-const double diff_A = 1;
-const double diff_Aact = 1;
-const double diff_AA = 0.6;
-const double diff_APpase = 1;
+const double diff_A = 0;
+const double diff_Aact = 0;
+const double diff_AA = 0;
+const double diff_APpase = 0;
 mat44 D0 = diagmat(vec({diff_A, diff_Aact, diff_AA, diff_APpase})); //TODO make const?
 
 //ppase concentration and reaction constants
 const double ppase = 1;
-const double kcat = 1; //self-activation
-const double kaf = 1; //aa* complex association
-const double kar = 1; //aa* complex dissociation
-const double kacat = 1; //aa* -> 2a* phosphorylation
-const double kpf = 1; //a*ppase complex association
-const double kpr = 1; //a*ppase complex dissociation
-const double kpcat = 1; //a*ppase -> a + ppase dephosphorylation
+const double kcis = 3.84e-7; //self-activation
+const double kaf = 0.042; //aa* complex association
+const double kar = 0.267; //aa* complex dissociation
+const double kacat = 0.00142; //aa* -> 2a* phosphorylation
+const double kpf = 0.0126; //a*ppase complex association
+const double kpr = 0.061; //a*ppase complex dissociation
+const double kpcat = 0.00126; //a*ppase -> a + ppase dephosphorylation
 
 vec4 f0(vec4 u) { 
-    return vec({- kcat*u[0] - kaf*u[0]*u[1] + kar*u[2] + kpcat*u[3],
-                kcat*u[0] - kaf*u[0]*u[1] + kar*u[2] + 2*kacat*u[2] - kpf*u[1]*ppase + kpr*u[3], 
+    return vec({- kcis*u[0] - kaf*u[0]*u[1] + kar*u[2] + kpcat*u[3],
+                kcis*u[0] - kaf*u[0]*u[1] + kar*u[2] + 2*kacat*u[2] - kpf*u[1]*ppase + kpr*u[3], 
                 kaf*u[0]*u[1] - kar*u[2] - kacat*u[2], 
                 kpf*ppase*u[1] - kpr*u[3] - kpcat*u[3]});
 }
 
 mat44 jac0(vec4 u) {
-    return mat({{  -u[1]*kaf - kcat,             -u[0]*kaf,           kar,        kpcat},
-                {  -u[1]*kaf + kcat, -u[0]*kaf - ppase*kpf, 2*kacat + kar,          kpr},
+    return mat({{  -u[1]*kaf - kcis,             -u[0]*kaf,           kar,        kpcat},
+                {  -u[1]*kaf + kcis, -u[0]*kaf - ppase*kpf, 2*kacat + kar,          kpr},
                 {          u[1]*kaf,              u[0]*kaf,  -kacat - kar,            0},
                 {                 0,             ppase*kpf,             0, -kpcat - kpr}});
 }
 
 void initialize0(){
-    for (int i = 0; i < L; i++) {
-        conc[i] = ones<vec>(4);
+    /*int initial_length = (int)(30 / h) + 1;  // length of spike in initial conditions //TODO rename
+    for (int i = 0; i < initial_length; i++) {
+        conc[i] = vec({0, 1, 0, 0});
     }
+    for (int i = initial_length; i < L; i++) {
+        conc[i] = vec({1, 0, 0, 0});
+    }*/
+    for (int i = 0; i < L; i++) {
+        conc[i] = vec({1 - (double)i / (L - 1), (double)i / (L - 1), 0, 0});
+    }
+
 }
 
 
